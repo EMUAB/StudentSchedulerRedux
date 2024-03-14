@@ -35,4 +35,17 @@ public class CourseService {
     public List<CourseModel> findCoursesByName(String courseName) {
         return courseRepository.findByCourseNameContainingIgnoreCase(courseName);
     }
+
+    public CourseModel updateCourseId(@NonNull String id, @NonNull CourseModel newCourse) {
+        Optional<CourseModel> existingCourseOptional = courseRepository.findById(id);
+        if (existingCourseOptional.isPresent()) {
+            CourseModel existingCourse = existingCourseOptional.get();
+            existingCourse.setId(newCourse.getId()); // Set the new ID
+            existingCourse.setCourseName(newCourse.getCourseName());
+            existingCourse.setLevel(newCourse.getLevel());
+            return courseRepository.save(existingCourse);
+        } else {
+            throw new IllegalArgumentException("Course with id " + id + " not found");
+        }
+    }
 }

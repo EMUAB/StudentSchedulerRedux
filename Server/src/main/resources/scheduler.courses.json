@@ -1,0 +1,21 @@
+[{
+  "_id": {
+    "$oid": "65f33f2207e777dfd7f70197"
+  },
+  "courseName": "CS 499",
+  "level": "Undergraduate"
+},
+{
+  "_id": {
+    "$oid": "65f3486e07e777dfd7f7019b"
+  },
+  "courseName": "CS 103",
+  "level": "Undergraduate"
+},
+{
+  "_id": {
+    "$oid": "65f3489307e777dfd7f7019d"
+  },
+  "courseName": "CS 610",
+  "level": "Graduate"
+}]

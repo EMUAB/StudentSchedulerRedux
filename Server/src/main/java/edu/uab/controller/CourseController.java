@@ -41,9 +41,9 @@ public class CourseController {
 
     // Update an existing course
     @PutMapping("/{id}")
-    public ResponseEntity<CourseModel> updateCourse(@PathVariable String id, @RequestBody CourseModel course) {
-        course.setID(id);
-        CourseModel updatedCourse = courseService.saveCourse(course);
+    public ResponseEntity<CourseModel> updateCourse(@PathVariable @NonNull String id,
+            @RequestBody @NonNull CourseModel course) {
+        CourseModel updatedCourse = courseService.updateCourseId(id, course);
         return ResponseEntity.ok(updatedCourse);
     }
 
