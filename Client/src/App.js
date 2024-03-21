@@ -4,11 +4,18 @@ import moment from "moment";
 
 import "./App.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import DashNavbar from "./components/Navbar";
 
 const localizer = momentLocalizer(moment);
 
+
 class App extends Component {
+  setIsLoggedIn = (state) => {
+     this.setState({ isLoggedIn: state });
+   }
+
   state = {
+    isLoggedIn: true,
     events: [
       {
         start: moment().toDate(),
@@ -23,6 +30,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <DashNavbar isLoggedIn={this.state.isLoggedIn} setIsLoggedIn = {this.setIsLoggedIn}/>
         <Calendar
           localizer={localizer}
           defaultDate={new Date()}
