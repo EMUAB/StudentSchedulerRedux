@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:secureP%40ssword@main-cluster.tzkisie.mongodb.net/?retryWrites=true&w=majority&appName=main-cluster
+      database: scheduler
