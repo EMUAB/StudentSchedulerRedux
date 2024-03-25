@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const DashNavbar = ({ isLoggedIn, setIsLoggedIn }) => {
@@ -14,7 +14,6 @@ const DashNavbar = ({ isLoggedIn, setIsLoggedIn }) => {
                 <Nav className="ms-auto">
                     {isLoggedIn ? (
                         <>
-                            <Nav.Link href="#dashboard">Dashboard</Nav.Link>
                             <Nav.Link href="#profile">Profile</Nav.Link>
                             <Nav.Link href="https://ssb.it.uab.edu/pls/sctprod/zweb_stu_crm.main_page">BlazerNet</Nav.Link>
                             <Nav.Link href="#" onClick={() => setIsLoggedIn(false)}>Logout</Nav.Link>
