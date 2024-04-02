@@ -1,0 +1,6 @@
+cd WebScraper
+venv\Scripts\activate
+run scraper.py
+    Use run button
+    (python or python3) scraper.py
+deactivate
