@@ -6,6 +6,8 @@ import "./App.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DashNavbar from "./components/Navbar";
 import { Button, Card } from "react-bootstrap";
+import possibleSchedData from "./possible-sched-data";
+import Column from "./components/Column";
 
 const localizer = momentLocalizer(moment);
 
@@ -27,8 +29,11 @@ class App extends Component {
           .toDate(),
         title: "Some title"
       }
-    ]
+    ],
+    possibleSchedules: possibleSchedData.schedules
   };
+
+  onDragEnd = (result) => { };
 
   render() {
     return (
@@ -94,7 +99,7 @@ class App extends Component {
                   </Button>
                 </Card.Title>
                 <Card.Text>
-                  No possible schedules!
+                  <Column schedules={this.state.possibleSchedules} />
                 </Card.Text>
               </Card.Body>
             </Card>
