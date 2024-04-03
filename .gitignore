@@ -4,10 +4,9 @@ target/
 !Server/src/main/**/target/
 !Server/src/unittests/**/target/
 
-start-server.bat
-start-server.sh
-server-starters.zip
-test.txt
+# test.txt
+.server-starters/
+.server-starters/*
 ### STS ###
 .apt_generated
 .classpath
