@@ -3,7 +3,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !Server/src/main/**/target/
 !Server/src/unittests/**/target/
-
+start-server.bat
+start-server.sh
+server-starters.zip
 ### STS ###
 .apt_generated
 .classpath
