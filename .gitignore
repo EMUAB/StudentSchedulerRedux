@@ -4,7 +4,6 @@ target/
 !Server/src/main/**/target/
 !Server/src/unittests/**/target/
 
-# test.txt
 serverstarters/
 serverstarters/*
 ### STS ###
