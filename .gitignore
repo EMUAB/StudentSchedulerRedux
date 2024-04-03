@@ -5,8 +5,8 @@ target/
 !Server/src/unittests/**/target/
 
 # test.txt
-.server-starters/
-.server-starters/*
+serverstarters/
+serverstarters/*
 ### STS ###
 .apt_generated
 .classpath
