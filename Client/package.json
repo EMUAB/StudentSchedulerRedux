@@ -1,5 +1,5 @@
 {
-  "name": "StudentSchedulerRedux",
+  "name": "student-scheduler-redux",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
