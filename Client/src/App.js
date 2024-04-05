@@ -3,6 +3,7 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import "./App.css";
+import Modal from 'react-modal';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DashNavbar from "./components/Navbar";
 import { Button, Card } from "react-bootstrap";
@@ -11,13 +12,39 @@ import Column from "./components/Column";
 
 const localizer = momentLocalizer(moment);
 
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
 
+
+Modal.setAppElement(document.getElementById('root'));
 class App extends Component {
   setIsLoggedIn = (state) => {
     this.setState({ isLoggedIn: state });
   }
 
+  closeModal = () => {
+    this.setState({ modalIsOpen: false });
+  };
+
+  openModal = () => {
+    console.log("open modal");
+    this.setState({ modalIsOpen: true });
+  };
+
+  afterOpenModal = () => {
+    // references are now sync'd and can be accessed.
+  }
+
   state = {
+    modalIsOpen: false,
     isLoggedIn: true,
     selectedTerm: "Fall 2021",
     advisorName: "Dr. John Doe",
@@ -33,11 +60,9 @@ class App extends Component {
     possibleSchedules: possibleSchedData.schedules
   };
 
-  onDragEnd = (result) => { };
-
   render() {
     return (
-      <div className="App">
+      <div className="App" style = {{height:"100vh"}}>
         <DashNavbar
           isLoggedIn={this.state.isLoggedIn}
           setIsLoggedIn={this.setIsLoggedIn}
@@ -48,7 +73,27 @@ class App extends Component {
               <Card.Body>
                 <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>{this.state.selectedTerm}</Card.Title>
                 <Card.Text>
-                  <Button variant="light" size="sm" href="#">Change term</Button>
+                  <Button variant="light" size="sm" onClick={this.openModal}>Change term</Button>
+                  <Modal
+                    isOpen={this.state.modalIsOpen}
+                    onAfterOpen={this.afterOpenModal}
+                    onRequestClose={this.closeModal}
+                    style={customStyles}
+                    contentLabel="Change Term Modal"
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <h2>Change Term</h2>
+                    <button onClick={this.closeModal}>close</button>
+                    <div>I am a modal</div>
+                    <form>
+                      <input />
+                      <button>tab navigation</button>
+                      <button>stays</button>
+                      <button>inside</button>
+                      <button>the modal</button>
+                    </form>
+                    </div>
+                  </Modal>
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -105,17 +150,19 @@ class App extends Component {
             </Card>
           </div>
         </div >
+      </div >
+    );
+  }
+}
 
-        <Calendar
+/*
+<Calendar
           localizer={localizer}
           defaultDate={new Date()}
           defaultView="month"
           events={this.state.events}
           style={{ height: "100vh", backgroundColor: "#f9f9f9" }}
         />
-      </div >
-    );
-  }
-}
+*/
 
 export default App;
