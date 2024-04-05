@@ -9,6 +9,7 @@ import DashNavbar from "./Navbar";
 import { Button, Card } from "react-bootstrap";
 import possibleSchedData from "./possible-sched-data";
 import Column from "./Column";
+import {logout} from '../AuthService';
 
 const modalStyle = {
   content: {
@@ -23,10 +24,9 @@ const modalStyle = {
 
 function Dashboard() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedTerm, setSelectedTerm] = useState("Fall 2021");
-  const [advisorName, setAdvisorName] = useState("Dr. John Doe");
+  const [selectedTerm, setSelectedTerm] = useState("Spring 2024");
+  const [advisorName, setAdvisorName] = useState("John Doe");
   const [events, setEvents] = useState([
     {
       start: moment().toDate(),
@@ -50,11 +50,15 @@ function Dashboard() {
     // references are now sync'd and can be accessed.
   }
 
+  const handleLogout = () => {
+    logout();
+    window.location.reload();
+  }
+
   return (
     <div className="Dashboard">
       <DashNavbar
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
+        logout={handleLogout}
       />
       <div className="card-divs">
         <div className="top-link-card-container" style={{ display: 'flex', marginTop: '1rem', marginBottom: '1rem', textAlign: 'left' }}>

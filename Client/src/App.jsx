@@ -1,34 +1,39 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import { isAuthenticated, login, getToken } from './AuthService';
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState('');
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
+  const handleLogin = (blazerID, password) => {
+    const token = blazerID.concat(password);
+    // console.log(token);
+    login(token);
+    setToken(token);
     navigateTo('/');
-  };
+  }
 
   const navigateTo = useNavigate();
 
   // Check isLoggedIn state, if false, redirect to /login
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isAuthenticated()) {
       navigateTo('/login');
     } else {
+      // console.log(getToken());
       navigateTo('/');
     }
-  }, [isLoggedIn, navigateTo]);
+  }, [navigateTo]);
 
   return (
-      <div>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        </Routes>
-      </div>
+    <div>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+      </Routes>
+    </div>
   );
 };
 

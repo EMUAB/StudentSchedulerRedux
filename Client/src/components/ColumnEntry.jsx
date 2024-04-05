@@ -16,6 +16,7 @@ const Container = styled.div`
 export default class ColumnEntry extends React.Component {
     viewSchedule = () => {
         console.log('Viewing schedule', this.props.schedule.id);
+        // TODO - add schedule viewing modal
     };
 
     render() {

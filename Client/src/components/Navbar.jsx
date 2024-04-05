@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const DashNavbar = ({ isLoggedIn, setIsLoggedIn }) => {
+const DashNavbar = ({ logout }) => {
 
     return (
         <Navbar expand="lg" style={{ backgroundColor: "#1e6b52" }} variant="dark">
@@ -12,19 +12,9 @@ const DashNavbar = ({ isLoggedIn, setIsLoggedIn }) => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ms-auto">
-                    {isLoggedIn ? (
-                        <>
-                            <Nav.Link href="#profile" style={{ color: "#fff" }}>Profile</Nav.Link>
-                            <Nav.Link href="https://idm.uab.edu/sso/blazernet?inst=prod" style={{ color: "#fff" }}>BlazerNet</Nav.Link>
-                            <Nav.Link href="#" onClick={() => setIsLoggedIn(false)} style={{ color: "#fff" }}>Logout</Nav.Link>
-                        </>
-                    ) : (
-                        <>
-                            <Nav.Link href="#" onClick={() => setIsLoggedIn(true)} style={{ color: "#fff" }}>Login</Nav.Link>
-                            <Nav.Link href="#about" style={{ color: "#fff" }}>Settings</Nav.Link>
-                            <Nav.Link href="https://idm.uab.edu/sso/blazernet?inst=prod" style={{ color: "#fff" }}>BlazerNet</Nav.Link>
-                        </>
-                    )}
+                    <Nav.Link href="#profile" style={{ color: "#fff" }}>Profile</Nav.Link>
+                    <Nav.Link href="https://idm.uab.edu/sso/blazernet?inst=prod" style={{ color: "#fff" }}>BlazerNet</Nav.Link>
+                    <Nav.Link href="#" onClick={logout} style={{ color: "#fff" }}>Logout</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
