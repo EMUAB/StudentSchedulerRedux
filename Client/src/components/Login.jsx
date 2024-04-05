@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import logo from '/uab-color-logo.png';
+import Button from "react-bootstrap/Button";
 import './Login.css';
 export const Login = ({onLogin}) => {
     const [email, setEmail] = useState('');
@@ -30,7 +31,7 @@ return (
             <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="********" id="password" name="password" />
           </div>
           <div className="field-container">
-            <button type="submit">Log In</button>
+            <Button variant="success" onClick={onLogin}>Log In</Button>
             <p className="p1">Having trouble logging in?</p>
             <p className="p2">Contact AskIT at 205-996-5555 if you have any problems using this system or your BlazerID</p>
             <p className="p3">Security Notice</p>
@@ -39,7 +40,7 @@ return (
             password should have addresses that begin with https:// (not http:) and contain "uab.edu".Also, your browser should visually indicate
             that you are accessing a secure page, usually a padlock icon. </p>
 
-            <p className="p5">This system is available only for authorized purposes by authorized users.Use for any other purpose may result in disciplinary action
+            <p className="p5">This system is available only for authorized purposes by authorized users. Use for any other purpose may result in disciplinary action
                or criminal prosecution against the user.</p>
           </div>
         </form>

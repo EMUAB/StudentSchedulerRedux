@@ -1,6 +1,7 @@
 .login-container {
   background-color: #f0f0f0;
   text-align: start;
+  height: 100vh;
 }
 
 
@@ -11,10 +12,11 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #ccc;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
-  width: 400px;
+  width: 380px;
   height: auto;
   padding: 1rem;
 }
@@ -27,13 +29,12 @@
 .login-form input {
   width: 100%;
   padding: 8px;
-  margin-bottom: 10px;
 }
 
 .form-container {
   background-color: white;
   border: 2px solid #ccc;
-  padding: 40px 20px 20px;
+  padding: 20px;
   border-radius: 10px;
   max-width: 444px;
   margin: 80px auto;
@@ -51,24 +52,21 @@
 .field-container input,
 .field-container button {
   width: 100%;
-  padding: 20px;
+  padding: 10px 10px 10px 10px;
   box-sizing: border-box;
   border: 2px solid #ccc;
   border-radius: 5px;
 }
 
 .field-container button {
-  background-color: darkgreen;
+  background-color: #1e6b52;
   color: white;
   font-size: 1.2em;
   cursor: pointer;
-
 }
 
 .field-container button:hover {
-  background-color: darkgreen;
   border-color: black;
-
 }
 
 .header1 {
@@ -76,10 +74,8 @@
   /* Optional: Adjust font weight */
   font-size: 16px;
   /* Adjust font size */
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
+  margin: 20px 0px 10px;
+  line-height: 1.25em;
 }
 
 .header2 {
@@ -88,6 +84,7 @@
   font-size: 13px;
   /* Adjust font size */
   margin: 13px 0px;
+  line-height: 1.25em;
 }
 
 .p1 {
@@ -97,6 +94,7 @@
   font-size: 15px;
   /* Adjust font size */
   text-align: center;
+  line-height: 1.25em;
 }
 
 .p2 {
@@ -105,6 +103,7 @@
   font-size: 12px;
   /* Adjust font size */
   text-align: center;
+  line-height: 1.25em;
 }
 
 .p3 {
@@ -114,6 +113,7 @@
   font-size: 13px;
   /* Adjust font size */
   text-align: center;
+  line-height: 1.25em;
 }
 
 .p4 {
@@ -122,6 +122,7 @@
   font-size: 11px;
   /* Adjust font size */
   text-align: left;
+  line-height: 1.25em;
 }
 
 .p5 {
@@ -130,4 +131,5 @@
   font-size: 11px;
   /* Adjust font size */
   text-align: left;
+  line-height: 1.25em;
 }
