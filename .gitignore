@@ -4,6 +4,8 @@ target/
 !Server/src/main/**/target/
 !Server/src/unittests/**/target/
 
+serverstarters/
+serverstarters/*
 ### STS ###
 .apt_generated
 .classpath
