@@ -1,38 +1,25 @@
-import React, { Component } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
+import React, { useState } from "react";
+import Login from "./Login";
+import './Login.css';
+import Calendar from "./Calendar";
 
-import "./App.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 
-const localizer = momentLocalizer(moment);
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-class App extends Component {
-  state = {
-    events: [
-      {
-        start: moment().toDate(),
-        end: moment()
-          .add(1, "days")
-          .toDate(),
-        title: "Some title"
-      }
-    ]
+  const handleLogin = () => {
+    setIsLoggedIn(true);
   };
 
-  render() {
-    return (
-      <div className="App">
-        <Calendar
-          localizer={localizer}
-          defaultDate={new Date()}
-          defaultView="month"
-          events={this.state.events}
-          style={{ height: "100vh" }}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="App">
+      {isLoggedIn ? (
+        <Calendar />
+      ) : (
+        <Login onLogin={handleLogin} />
+      )}
+    </div>
+  );
+};
 
 export default App;

@@ -1,0 +1,105 @@
+body {
+  background-color: #f0f0f0;
+}
+
+.banner {
+  background-color: white;
+  padding: 08px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+}
+.logo {
+  width: 400px;
+  height: auto;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.form-container {
+  background-color: white;
+  border: 2px solid #ccc;
+  padding: 40px 20px 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 80px auto;
+  width: 80%;
+}
+
+.field-container {
+  margin-bottom: 20px;
+}
+
+.field-container label {
+  display: block;
+}
+
+.field-container input,
+.field-container button {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+.field-container button {
+  background-color: darkgreen;
+  color: white;
+  font-size: 1.2em;
+  cursor: pointer;
+
+}
+
+.field-container button:hover {
+  background-color: darkgreen;
+  border-color: black;
+
+}
+h2 {
+  font-weight: 700; /* Optional: Adjust font weight */
+  font-size: 16px; /* Adjust font size */
+}
+h3 {
+  font-weight: 400; /* Optional: Adjust font weight */
+  font-size: 13px; /* Adjust font size */
+}
+.p1 {
+    padding-top: 20px;
+    font-weight: 700; /* Optional: Adjust font weight */
+    font-size: 15px; /* Adjust font size */
+    text-align: center;
+}
+.p2 {
+    font-weight: 300; /* Optional: Adjust font weight */
+    font-size: 12px; /* Adjust font size */
+    text-align: center;
+}
+.p3 {
+    padding-top: 10px;
+    font-weight: 550; /* Optional: Adjust font weight */
+    font-size: 13px; /* Adjust font size */
+    text-align: center;
+}
+.p4 {
+     font-weight: 350; /* Optional: Adjust font weight */
+     font-size: 11px; /* Adjust font size */
+     text-align: left;
+
+}
+.p5 {
+     font-weight: 350; /* Optional: Adjust font weight */
+     font-size: 11px; /* Adjust font size */
+     text-align: left;
+
+}
