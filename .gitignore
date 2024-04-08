@@ -33,6 +33,7 @@ build/
 .vscode/
 
 /Client/node_modules
-WebScraper/venv/*
+WebScraper/
+WebScraper/*
 serverstarters/
 serverstarters/*
