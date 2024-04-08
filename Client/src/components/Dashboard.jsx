@@ -24,7 +24,7 @@ const modalStyle = {
 
 function Dashboard() {
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [changeTermModalOpen, setChangeTermModalOpen] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState("Spring 2024");
   const [advisorName, setAdvisorName] = useState("John Doe");
   const [events, setEvents] = useState([
@@ -39,11 +39,11 @@ function Dashboard() {
   const [possibleSchedules, setPossibleSchedules] = useState(possibleSchedData.schedules);
 
   const closeModal = () => {
-    setModalIsOpen(false);
+    setChangeTermModalOpen(false);
   };
 
   const openModal = () => {
-    setModalIsOpen(true);
+    setChangeTermModalOpen(true);
   };
 
   const afterOpenModal = () => {
@@ -68,7 +68,7 @@ function Dashboard() {
               <Card.Text>
                 <Button variant="light" size="sm" onClick={openModal}>Change term</Button>
                 <Modal
-                  isOpen={modalIsOpen}
+                  isOpen={changeTermModalOpen}
                   onAfterOpen={afterOpenModal}
                   onRequestClose={closeModal}
                   style={modalStyle}
