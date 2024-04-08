@@ -6,6 +6,9 @@ target/
 
 serverstarters/
 serverstarters/*
+WebScraper/venv/
+WebScraper/venv/*
+
 ### STS ###
 .apt_generated
 .classpath
