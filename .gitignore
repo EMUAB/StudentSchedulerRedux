@@ -4,8 +4,6 @@ target/
 !Server/src/main/**/target/
 !Server/src/unittests/**/target/
 
-serverstarters/
-serverstarters/*
 ### STS ###
 .apt_generated
 .classpath
@@ -34,5 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
-### Node.js ###
-node_modules/
+/Client/node_modules
+WebScraper/
+WebScraper/*
+serverstarters/
+serverstarters/*
