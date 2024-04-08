@@ -6,8 +6,8 @@ target/
 
 serverstarters/
 serverstarters/*
-WebScraper/venv/
-WebScraper/venv/*
+WebScraper/
+WebScraper/*
 
 ### STS ###
 .apt_generated
