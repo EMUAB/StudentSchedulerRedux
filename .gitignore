@@ -4,11 +4,6 @@ target/
 !Server/src/main/**/target/
 !Server/src/unittests/**/target/
 
-serverstarters/
-serverstarters/*
-WebScraper/
-WebScraper/*
-
 ### STS ###
 .apt_generated
 .classpath
@@ -38,3 +33,6 @@ build/
 .vscode/
 
 /Client/node_modules
+WebScraper/
+serverstarters/
+serverstarters/*
