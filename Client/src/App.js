@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import Login from "./Login";
+import React, { useState, useEffect } from 'react';
+import Courses from './Courses';
+import Login from './Login';
 import './Login.css';
 import Calendar from "./Calendar";
 
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -14,11 +16,11 @@ const App = () => {
   return (
     <div className="App">
       {isLoggedIn ? (
-        <Calendar />
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
-    </div>
+        <Courses /> // Render Courses component when logged in
+        ) : (
+       <Login onLogin={() => setIsLoggedIn(true)} /> // Update state on successful login
+    )}
+  </div>
   );
 };
 
