@@ -6,26 +6,14 @@ import "./Dashboard.css";
 import Modal from 'react-modal';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DashNavbar from "./Navbar";
-import { Button, Card } from "react-bootstrap";
-import possibleSchedData from "./possible-sched-data";
+import { Button, Card, Form } from "react-bootstrap";
+import { possibleSchedData, possibleTerms } from "./possible-sched-data";
 import Column from "./Column";
-import {logout} from '../AuthService';
-
-const modalStyle = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
+import { logout } from '../AuthService';
 
 function Dashboard() {
 
   const [changeTermModalOpen, setChangeTermModalOpen] = useState(false);
-  const [selectedTerm, setSelectedTerm] = useState("Spring 2024");
   const [advisorName, setAdvisorName] = useState("John Doe");
   const [events, setEvents] = useState([
     {
@@ -37,8 +25,16 @@ function Dashboard() {
     }
   ]);
   const [possibleSchedules, setPossibleSchedules] = useState(possibleSchedData.schedules);
+  const [terms, setTerms] = useState(possibleTerms.terms);
+  const [selectedSchedule, setSelectedSchedule] = useState(null);
+  const [selectedTerm, setSelectedTerm] = useState(terms[0]);
+  const [tempTermID, setTempTermID] = useState(terms[0]);
 
-  const closeModal = () => {
+
+  const closeModal = (chosenTerm) => {
+    if (chosenTerm) {
+      setSelectedTerm(terms.find(term => term.id === tempTermID));
+    }
     setChangeTermModalOpen(false);
   };
 
@@ -57,34 +53,40 @@ function Dashboard() {
 
   return (
     <div className="Dashboard">
-      <DashNavbar
-        logout={handleLogout}
-      />
+      <DashNavbar logout={handleLogout} />
       <div className="card-divs">
         <div className="top-link-card-container" style={{ display: 'flex', marginTop: '1rem', marginBottom: '1rem', textAlign: 'left' }}>
           <Card style={{ width: '18rem', marginRight: '1rem', marginLeft: '1rem', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: "#1b604a", color: "#fff" }}>
             <Card.Body>
-              <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>{selectedTerm}</Card.Title>
+              <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>{selectedTerm.name}</Card.Title>
               <Card.Text>
                 <Button variant="light" size="sm" onClick={openModal}>Change term</Button>
                 <Modal
                   isOpen={changeTermModalOpen}
                   onAfterOpen={afterOpenModal}
                   onRequestClose={closeModal}
-                  style={modalStyle}
+                  style={{
+                    content: {
+                      top: '50%',
+                      left: '50%',
+                      right: 'auto',
+                      bottom: 'auto',
+                      transform: 'translate(-50%, -50%)',
+                    },
+                  }}
                   contentLabel="Change Term Modal"
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '30rem' }}>
                     <h2>Change Term</h2>
-                    <button onClick={closeModal}>close</button>
-                    <div>I am a modal</div>
-                    <form>
-                      <input />
-                      <button>tab navigation</button>
-                      <button>stays</button>
-                      <button>inside</button>
-                      <button>the modal</button>
-                    </form>
+                    <Form.Select aria-label="Term selection form" onChange={(e) => setTempTermID(e.target.value)}>
+                      {terms.map((term, index) => (
+                        <option key={index} value={term.id} selected={term.id === selectedTerm.id}>{term.name}</option>
+                      ))}
+                    </Form.Select>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '1rem' }}>
+                      <Button variant="primary" onClick={() => closeModal(true)} style={{ width: '8rem' }}>Select</Button>
+                      <Button variant="secondary" onClick={() => closeModal(false)} style={{ width: '8rem' }}>Cancel</Button>
+                    </div>
                   </div>
                 </Modal>
               </Card.Text>

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from "@emotion/styled";
-import { DragIndicator, Visibility } from '@mui/icons-material';
+import { Visibility } from '@mui/icons-material';
 
 const Container = styled.div`
     border: 1px solid lightgrey;
