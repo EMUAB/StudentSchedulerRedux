@@ -7,6 +7,7 @@ public class CourseModel {
     private String courseName;
     private String level;
 
+
     public IdWrapper get_id() {
         return _id;
     }
@@ -31,19 +32,7 @@ public class CourseModel {
         this.level = level;
     }
 
-    public String getId() {
-        if (_id != null) {
-            return _id.getOid();
-        }
-        return null;
-    }
-
-    public void setId(String id) {
-        if (_id == null) {
-            _id = new IdWrapper();
-        }
-        _id.setOid(id);
-    }
+    
 
     public static class IdWrapper {
         @JsonProperty("$oid")
