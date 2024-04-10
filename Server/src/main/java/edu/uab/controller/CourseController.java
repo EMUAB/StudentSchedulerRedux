@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/courses")
-@CrossOrigin(origins = "http://localhost:3000")
 public class CourseController {
 
     @Autowired
@@ -40,12 +39,12 @@ public class CourseController {
         return ResponseEntity.ok(savedCourse);
     }
 
-    // Update an existing course (excluding ID)
+    // Update an existing course
     @PutMapping("/{id}")
-    public ResponseEntity<CourseModel> updateCourseDetails(@PathVariable @NonNull String id,
-            @RequestBody @NonNull CourseModel updatedCourse) {
-        CourseModel updated = courseService.updateCourseDetails(id, updatedCourse);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<CourseModel> updateCourse(@PathVariable @NonNull String id,
+            @RequestBody @NonNull CourseModel course) {
+        CourseModel updatedCourse = courseService.updateCourseId(id, course);
+        return ResponseEntity.ok(updatedCourse);
     }
 
     // Delete a course
@@ -53,5 +52,12 @@ public class CourseController {
     public ResponseEntity<Void> deleteCourse(@PathVariable @NonNull String id) {
         courseService.deleteCourse(id);
         return ResponseEntity.ok().build();
+    }
+
+    // Search for courses by name
+    @GetMapping("/search")
+    public ResponseEntity<List<CourseModel>> findCoursesByName(@RequestParam String name) {
+        List<CourseModel> courses = courseService.findCoursesByName(name);
+        return ResponseEntity.ok(courses);
     }
 }
