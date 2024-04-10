@@ -1,0 +1,135 @@
+.login-container {
+  background-color: #f0f0f0;
+  text-align: start;
+  height: 100vh;
+}
+
+
+.banner {
+  background-color: white;
+  padding: 08px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  width: 380px;
+  height: auto;
+  padding: 1rem;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 8px;
+}
+
+.form-container {
+  background-color: white;
+  border: 2px solid #ccc;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 444px;
+  margin: 80px auto;
+  width: 80%;
+}
+
+.field-container {
+  margin-bottom: 20px;
+}
+
+.field-container label {
+  display: block;
+}
+
+.field-container input,
+.field-container button {
+  width: 100%;
+  padding: 10px 10px 10px 10px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+.field-container button {
+  background-color: #1e6b52;
+  color: white;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.field-container button:hover {
+  border-color: black;
+}
+
+.header1 {
+  font-weight: 700;
+  /* Optional: Adjust font weight */
+  font-size: 16px;
+  /* Adjust font size */
+  margin: 20px 0px 10px;
+  line-height: 1.25em;
+}
+
+.header2 {
+  font-weight: 400;
+  /* Optional: Adjust font weight */
+  font-size: 13px;
+  /* Adjust font size */
+  margin: 13px 0px;
+  line-height: 1.25em;
+}
+
+.p1 {
+  padding-top: 20px;
+  font-weight: 700;
+  /* Optional: Adjust font weight */
+  font-size: 15px;
+  /* Adjust font size */
+  text-align: center;
+  line-height: 1.25em;
+}
+
+.p2 {
+  font-weight: 300;
+  /* Optional: Adjust font weight */
+  font-size: 12px;
+  /* Adjust font size */
+  text-align: center;
+  line-height: 1.25em;
+}
+
+.p3 {
+  padding-top: 10px;
+  font-weight: 550;
+  /* Optional: Adjust font weight */
+  font-size: 13px;
+  /* Adjust font size */
+  text-align: center;
+  line-height: 1.25em;
+}
+
+.p4 {
+  font-weight: 350;
+  /* Optional: Adjust font weight */
+  font-size: 11px;
+  /* Adjust font size */
+  text-align: left;
+  line-height: 1.25em;
+}
+
+.p5 {
+  font-weight: 350;
+  /* Optional: Adjust font weight */
+  font-size: 11px;
+  /* Adjust font size */
+  text-align: left;
+  line-height: 1.25em;
+}
