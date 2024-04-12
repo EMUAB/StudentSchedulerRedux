@@ -6,7 +6,7 @@ const Courses = () => {
     useEffect(() => {
         // Fetch courses from your backend
         const fetchCourses = async () => {
-            const response = await fetch('/courses'); // Adjust endpoint as necessary
+            const response = await fetch('/api/courses'); // Adjust endpoint as necessary
             const data = await response.json();
             console.log(data); // Print data to console
             setCourses(data);
