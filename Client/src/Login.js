@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import logo from './UAB.png';
+
 export const Login = (props) => {
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(email);
-    }
-
+const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(`Email: ${email}, Password: ${pass}`);
+    props.onLogin();
+  };
 
 return (
     <div className="login-container">
@@ -29,16 +30,16 @@ return (
           </div>
           <div className="field-container">
             <button type="submit">Log In</button>
-            <p class="p1">Having trouble logging in?</p>
-            <p class="p2">Contact AskIT at 205-996-5555 if you have any problems using this system or your BlazerID</p>
-            <p class="p3">Security Notice</p>
-            <p class="p4">For security reasons, quit your web browser when finished accessing services that require authentication.
+            <p className="p1">Having trouble logging in?</p>
+            <p className="p2">Contact AskIT at 205-996-5555 if you have any problems using this system or your BlazerID</p>
+            <p className="p3">Security Notice</p>
+            <p className="p4">For security reasons, quit your web browser when finished accessing services that require authentication.
             Be wary of any program or web page that asks for your BlazerID and password. Legitimate UAB web pages promptingfor your BlazerID and
             password should have addresses that begin with https:// (not http:) and contain "uab.edu".Also, your browser should visually indicate
             that you are accessing a secure page, usually a padlock icon. </p>
 
-            <p class="p5">This system is available only for authorized purposes by authorized users.Use for any other purpose may result in disciplinary action
-               or criminal prosecution against the user.</p>
+            <p className="p5">This system is available only for authorized purposes by authorized users.Use for any other purpose may result in disciplinary action 
+            or criminal prosecution against the user.</p>
           </div>
         </form>
       </div>
