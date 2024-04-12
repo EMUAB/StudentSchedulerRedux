@@ -17,9 +17,7 @@ public class CourseService {
     private CourseRepository courseRepository;
 
     public List<CourseModel> findAllCourses() {
-        List<CourseModel> courses = courseRepository.findAll();
-        System.out.println(courses.get(0));
-        return courses;
+        return courseRepository.findAll();
     }
 
     public Optional<CourseModel> findCourseById(@NonNull String id) {
@@ -34,24 +32,17 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
-    public CourseModel updateCourseDetails(@NonNull String id, @NonNull CourseModel updatedCourse) {
+    public List<CourseModel> findCoursesByName(String courseName) {
+        return courseRepository.findByCourseNameContainingIgnoreCase(courseName);
+    }
+
+    public CourseModel updateCourseId(@NonNull String id, @NonNull CourseModel newCourse) {
         Optional<CourseModel> existingCourseOptional = courseRepository.findById(id);
         if (existingCourseOptional.isPresent()) {
             CourseModel existingCourse = existingCourseOptional.get();
-            existingCourse.setCRN(updatedCourse.getCRN());
-            existingCourse.setSubject(updatedCourse.getSubject());
-            existingCourse.setCourseNumber(updatedCourse.getCourseNumber());
-            existingCourse.setSection(updatedCourse.getSection());
-            existingCourse.setTitle(updatedCourse.getTitle());
-            existingCourse.setCredit(updatedCourse.getCredit());
-            existingCourse.setDays(updatedCourse.getDays());
-            existingCourse.setTime(updatedCourse.getTime());
-            existingCourse.setCapacity(updatedCourse.getCapacity());
-            existingCourse.setEnrolled(updatedCourse.getEnrolled());
-            existingCourse.setRemaining(updatedCourse.getRemaining());
-            existingCourse.setInstructor(updatedCourse.getInstructor());
-            existingCourse.setDateRange(updatedCourse.getDateRange());
-            existingCourse.setLocation(updatedCourse.getLocation());
+            existingCourse.setId(newCourse.getId()); // Set the new ID
+            existingCourse.setCourseName(newCourse.getCourseName());
+            existingCourse.setLevel(newCourse.getLevel());
             return courseRepository.save(existingCourse);
         } else {
             throw new IllegalArgumentException("Course with id " + id + " not found");
