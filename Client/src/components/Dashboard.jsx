@@ -9,6 +9,7 @@ import { possibleSchedData, possibleTerms } from "./possible-sched-data";
 import { logout } from '../AuthService';
 import Calendar from './Calendar';
 import ScheduleList from './ScheduleList';
+import Courses from '../Courses';
 
 function Dashboard() {
 
@@ -128,8 +129,8 @@ function Dashboard() {
                   <RefreshIcon /> Refresh
                 </Button>
               </Card.Title>
-              <ScheduleList />
-              <Modal size="md" show={isPreviewScheduleModalOpen} onHide={() => setChangeTermModalOpen(false)} centered>
+              <ScheduleList setModal={setPreviewScheduleModalOpen} />
+              <Modal size="xl" show={isPreviewScheduleModalOpen} onHide={() => setPreviewScheduleModalOpen(false)} centered>
                 <Modal.Dialog style={{
                   display: 'flex', width: '100%', margin: '0px', fontFamily: 'Inter, sans-serif',
                 }}>
@@ -137,26 +138,20 @@ function Dashboard() {
                     <Modal.Title>Preview Schedule</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '50rem', height: '50rem' }}>
-                      <h2>Schedule Preview</h2>
-                      <Calendar />
-                      <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '1rem' }}>
-                        <Button variant="primary" onClick={() => setSelectedSchedule(null)} style={{ width: '10rem', height: '2.5rem', marginTop: '1rem' }}>Choose Schedule</Button>
-                        <Button variant="secondary" onClick={() => setPreviewScheduleModalOpen(false)} style={{ width: '6rem', marginTop: '1rem' }}>Cancel</Button>
-                      </div>
-                    </div>
+                    <Calendar />
                   </Modal.Body>
                   <Modal.Footer>
-                    <Button variant="secondary" onClick={() => closeChangeTermModal(false)}>Cancel</Button>
-                    <Button variant="primary" onClick={() => closeChangeTermModal(true)}>Select</Button>
+                    <Button variant="primary" onClick={() => setSelectedSchedule(null)}>Choose Schedule</Button>
+                    <Button variant="secondary" onClick={() => setPreviewScheduleModalOpen(false)}>Cancel</Button>
                   </Modal.Footer>
                 </Modal.Dialog>
               </Modal>
             </Card.Body>
           </Card>
         </div>
-      </div >
-    </div >
+      </div>
+      <Courses />
+    </div>
   );
 }
 

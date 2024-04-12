@@ -3,14 +3,14 @@ import { possibleSchedData } from "./possible-sched-data";
 import { Visibility } from '@mui/icons-material';
 
 
-const viewSchedule = (scheduleID) => {
+const viewSchedule = (scheduleID, setModal) => {
     console.log('Viewing schedule', scheduleID);
     // TODO - add schedule viewing modal
+    setModal(true);
 };
 
-const ScheduleList = () => {
+const ScheduleList = ({setModal}) => {
     const [possibleSchedules, setPossibleSchedules] = useState(possibleSchedData.schedules);
-
 
     const renderSchedules = () => {
         const scheduleElements = [];
@@ -33,7 +33,7 @@ const ScheduleList = () => {
                     <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingLeft: '4px', paddingRight: '8px' }}>
                         {schedule.courseIds.join(', ')}
                     </div>
-                    <div onClick={() => viewSchedule(schedule.id)} style={{ cursor: 'pointer', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', paddingRight: '4px' }}>
+                    <div onClick={() => viewSchedule(schedule.id, setModal)} style={{ cursor: 'pointer', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', paddingRight: '4px' }}>
                         <Visibility />
                         View
                     </div>
