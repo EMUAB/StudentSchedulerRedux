@@ -10,7 +10,6 @@ const Courses = () => {
             const data = await response.json();
             console.log(data); // Print data to console
             setCourses(data);
-            // console.log(data); // Print data to console
         };
 
         fetchCourses();

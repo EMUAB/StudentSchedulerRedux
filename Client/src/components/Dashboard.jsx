@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import moment from "moment";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import "./Dashboard.css";
@@ -30,7 +30,6 @@ function Dashboard() {
   const [selectedTerm, setSelectedTerm] = useState(terms[0]);
   const [tempTermID, setTempTermID] = useState(terms[0]);
 
-
   const closeChangeTermModal = (isTermChanged) => {
     if (isTermChanged) {
       setSelectedTerm(terms.find(term => term.id === tempTermID));
@@ -49,6 +48,48 @@ function Dashboard() {
     logout();
     window.location.reload();
   }
+
+  const [isCourseSelectionModalOpen, setCourseSelectionModalOpen] = useState(false);
+  const [selectedCSSubject, setSelectedCSSubject] = useState("");
+  const [selectedCSCourse, setSelectedCSCourse] = useState("");
+  const [selectedCSInstructor, setSelectedCSInstructor] = useState("");
+
+  const handleCSModal = (open) => {
+    if (open) {
+      setCourseSelectionModalOpen(true);
+    } else {
+      setCourseSelectionModalOpen(false);
+      setSelectedCSCourse("");
+      setSelectedCSInstructor("");
+      setSelectedCSSubject("");
+    }
+  }
+
+  const handleCSSubject = (subject) => {
+    setSelectedCSSubject(subject);
+  };
+  const handleCSCourse = (course) => {
+    setSelectedCSCourse(course);
+  };
+  const handleCSInstructor = (instructor) => {
+    setSelectedCSInstructor(instructor);
+  };
+
+
+
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    // Fetch courses from your backend
+    const fetchCourses = async () => {
+      const response = await fetch('/api/courses'); // Adjust endpoint as necessary
+      const data = await response.json();
+      console.log(data); // Print data to console
+      setCourses(data);
+    };
+
+    fetchCourses();
+  }, []);
 
   return (
     <div className="Dashboard">
@@ -98,7 +139,44 @@ function Dashboard() {
             <Card.Body>
               <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>Selected Courses</Card.Title>
               <Card.Text>
-                <Button variant="light" size="sm" href="#">Add courses</Button>
+                <Button variant="light" size="sm" onClick={() => handleCSModal(true)}>Add courses</Button>
+                <Modal size="md" show={isCourseSelectionModalOpen} onHide={() => handleCSModal(false)} centered>
+                  <Modal.Dialog style={{
+                    display: 'flex', width: '100%', margin: '0px', fontFamily: 'Inter, sans-serif',
+                  }}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Select Course</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <Form.Select aria-label="Subject filter selection" onChange={(e) => handleCSSubject(e.target.value)}>
+                        <option value="">Select Subject</option>
+                        {Array.from(new Set(courses.map(course => course.subject))).map((subject, index) => (
+                          <option key={index} value={subject}>{subject}</option>
+                        ))}
+                      </Form.Select>
+                      <Form.Select aria-label="Instructor filter selection" onChange={(e) => handleCSInstructor(e.target.value)}>
+                        <option value="">Select Instructor</option>
+                        {Array.from(new Set(courses.map(course => course.instructor))).map((instructor, index) => (
+                          <option key={index} value={instructor}>{instructor}</option>
+                        ))}
+                      </Form.Select>
+                      {(selectedCSSubject || selectedCSInstructor) ? (
+                        <ul>
+                          {courses.filter(course => (
+                            ((course.subject === selectedCSSubject) || (selectedCSSubject === ""))
+                            && ((course.instructor === selectedCSInstructor) || (selectedCSInstructor === "")))
+                          ).map((course) => (
+                            <li key={course.index}>{course.title}</li>
+                          ))}
+                        </ul>
+                      ) : (<></>)}
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={() => handleCSModal(false)}>Cancel</Button>
+                      <Button variant="primary" onClick={() => handleCourseSelection(selectedCSCourse)}>Select</Button>
+                    </Modal.Footer>
+                  </Modal.Dialog>
+                </Modal>
               </Card.Text>
             </Card.Body>
           </Card>
@@ -150,7 +228,6 @@ function Dashboard() {
           </Card>
         </div>
       </div>
-      <Courses />
     </div>
   );
 }

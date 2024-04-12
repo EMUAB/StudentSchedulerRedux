@@ -22,7 +22,6 @@ const App = () => {
     if (!isAuthenticated()) {
       navigateTo('/login');
     } else {
-      // console.log(getToken());
       navigateTo('/');
     }
   }, [navigateTo]);
