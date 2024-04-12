@@ -29,7 +29,7 @@ const CoursesList = ({ courses }) => {
                     key={course.id}
                 >
                     <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingLeft: '4px', paddingRight: '8px' }}>
-                        {course.subject} {course.title} {course.section} {course.location} {course.instructor} {course.time} {course.credit} {course.capacity} {course.enrolled}
+                        {course.courseNumber} - {course.title} - {course.section} - {course.instructor} - {course.time}
                         <Button variant="primary" size="sm" style={{ marginLeft: 'auto', marginRight: '4px' }}>Add</Button>
                     </div>
                 </div>
