@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/courses")
-@CrossOrigin(origins = "http://localhost:5713")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CourseController {
 
     @Autowired
