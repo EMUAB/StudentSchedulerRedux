@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react'
 import moment from "moment";
-import RefreshIcon from '@mui/icons-material/Refresh';
+import { Refresh, Add } from '@mui/icons-material';
 import "./Dashboard.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DashNavbar from "./Navbar";
@@ -9,7 +9,7 @@ import { possibleSchedData, possibleTerms } from "./possible-sched-data";
 import { logout } from '../AuthService';
 import Calendar from './Calendar';
 import ScheduleList from './ScheduleList';
-import CoursesList from './CoursesList';
+import { CSModalCourseList, SelectedCourseList } from './CoursesList';
 
 /**
  * Dashboard component.
@@ -80,8 +80,7 @@ function Dashboard() {
   const calculateHours = () => {
     let hours = 0;
     selectedCourses.forEach(course => {
-      console.log(hours);
-      hours += course.hours;
+      hours += Number(course.credit);
     });
     return hours;
   };
@@ -150,11 +149,18 @@ function Dashboard() {
   const addCheckedCourses = () => {
     checkedCSCourses.forEach(course => {
       course.checked = false;
-      setSelectedCourses(prevCourses => [...prevCourses, course]);
+      selectedCourses.push(courses.find(c => c.id === course.id));
     });
     console.log(selectedCourses);
+    resetCheckedCourses();
     handleCSModal(false);
   };
+
+  const removeSelectedCourses = (courseIDs) => {
+    for (let courseID of courseIDs) {
+      setSelectedCourses(selectedCourses.filter(c => c.id !== courseID));
+    }
+  }
 
   const addCourse = (courseID) => {
     setSelectedCourses([...selectedCourses, courses.find(course => course.id === courseID)]);
@@ -208,12 +214,13 @@ function Dashboard() {
             <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold', display: 'flex', marginBottom: '0px', padding: '1rem', paddingBottom: '0px' }}>
               <p style={{ marginBottom: '0px', paddingBottom: '0px' }}>Selected Courses</p>
               <div style={{ marginLeft: 'auto', alignSelf: 'flex-start', textAlign: 'center', backgroundColor: "#0f3b2d", borderRadius: '4px' }}>
-                <p style={{ fontSize: '20px', marginBottom: '0px', paddingBottom: '0px' }}>{calculateHours()}</p>
-                <p style={{ fontSize: '12px', marginBottom: '0px', paddingRight: '0.2rem', paddingLeft: '0.2rem', fontWeight: 'normal' }}>Hours</p>
+                <p style={{ fontSize: '20px', marginBottom: '0px', paddingBottom: '0px', color: calculateHours() >= 18 ? "#f33" : 'inherit' }}>{calculateHours()}</p>
+                <p style={{ fontSize: '12px', marginBottom: '0px', paddingRight: '0.2rem', paddingLeft: '0.2rem', fontWeight: 'normal' }}>Credit Hours</p>
               </div>
             </Card.Title>
-            <Card.Body>
-              <Button variant="light" size="sm" style={{ width: '100%' }} onClick={() => handleCSModal(true)}>Add course</Button>
+            <Card.Body style={{paddingTop: '0.4rem'}}>
+              <SelectedCourseList selectedCourses={selectedCourses} removeCourses={removeSelectedCourses} viewCourse={handleCSAboutModal} />
+              <Button variant="light" size="sm" style={{ width: '100%' }} onClick={() => handleCSModal(true)}><Add />Add course</Button>
               <Modal size="xl" show={isCourseSelectionModalOpen} onHide={() => handleCSModal(false)} backdrop="static" centered>
                 <Modal.Dialog style={{
                   display: 'flex', width: '100%', margin: '0px', fontFamily: 'Inter, sans-serif',
@@ -260,14 +267,14 @@ function Dashboard() {
                       <Accordion.Item eventKey="0">
                         <Accordion.Header>Checked Courses</Accordion.Header>
                         <Accordion.Body>
-                          <CoursesList courses={checkedCSCourses} checkCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={true} />
+                          <CSModalCourseList courses={checkedCSCourses} checkCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={true} />
                         </Accordion.Body>
                       </Accordion.Item>
                     </Accordion>
 
                     <div style={{ width: '100%', height: '1px', backgroundColor: '#dee2e6', margin: '0.5rem 0' }} />
 
-                    <CoursesList courses={filteredCSCourses} checkCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={false} />
+                    <CSModalCourseList courses={filteredCSCourses} checkCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={false} />
                   </Modal.Body>
 
                   <Modal.Footer>
@@ -321,7 +328,7 @@ function Dashboard() {
               <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold', display: 'flex' }}>
                 <p style={{ marginBottom: '4px' }}>Possible Schedules</p>
                 <Button variant="light" size="sm" style={{ marginLeft: 'auto', alignSelf: 'flex-start' }} href="#">
-                  <RefreshIcon /> Refresh
+                  <Refresh /> Refresh
                 </Button>
               </Card.Title>
               <ScheduleList setModal={setPreviewScheduleModalOpen} />
