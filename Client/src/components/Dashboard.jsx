@@ -80,6 +80,7 @@ function Dashboard() {
   const calculateHours = () => {
     let hours = 0;
     selectedCourses.forEach(course => {
+      console.log(hours);
       hours += course.hours;
     });
     return hours;
@@ -94,6 +95,7 @@ function Dashboard() {
       setSelectedCSInstructor("");
       setSelectedCSSubject("");
       setFilteredCSCourses([]);
+      setCheckedCSCourses([]);
     }
   }
   const handleCSSubject = (subject) => {
@@ -121,8 +123,8 @@ function Dashboard() {
   const [selectedCSAboutCourse, setSelectedCSAboutCourse] = useState({});
   const handleCSAboutModal = (open, selectedCourse) => {
     if (open) {
-      setCSAboutModalOpen(open);
       setSelectedCSAboutCourse(selectedCourse);
+      setCSAboutModalOpen(open);
     } else {
       setCSAboutModalOpen(open);
       setSelectedCSAboutCourse({});
@@ -139,7 +141,11 @@ function Dashboard() {
   }
 
   const addCheckedCourses = () => {
-    setSelectedCourses([...selectedCourses, ...checkedCSCourses]);
+    checkedCSCourses.forEach(course => {
+      course.checked = false;
+      setSelectedCourses(prevCourses => [...prevCourses, course]);
+    });
+    console.log(selectedCourses);
     handleCSModal(false);
   };
 
@@ -247,19 +253,19 @@ function Dashboard() {
                       <Accordion.Item eventKey="0">
                         <Accordion.Header>Checked Courses</Accordion.Header>
                         <Accordion.Body>
-                          <CoursesList courses={checkedCSCourses} addCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={true} />
+                          <CoursesList courses={checkedCSCourses} checkCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={true} />
                         </Accordion.Body>
                       </Accordion.Item>
                     </Accordion>
 
                     <div style={{ width: '100%', height: '1px', backgroundColor: '#dee2e6', margin: '0.5rem 0' }} />
 
-                    <CoursesList courses={filteredCSCourses} addCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={false} />
+                    <CoursesList courses={filteredCSCourses} checkCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={false} />
                   </Modal.Body>
 
                   <Modal.Footer>
                     <Button variant="secondary" onClick={() => handleCSModal(false)}>Cancel</Button>
-                    <Button variant="primary" onClick={() => handleCourseSelection(selectedCSCourse)}>Add Checked Courses</Button>
+                    <Button variant="primary" onClick={addCheckedCourses}>Add Checked Courses</Button>
                   </Modal.Footer>
                 </Modal.Dialog>
               </Modal>
@@ -280,10 +286,6 @@ function Dashboard() {
                     <p><b>Days:</b> {selectedCSAboutCourse.days} &emsp; <b>Time:</b> {selectedCSAboutCourse.time} &emsp; <b>Location:</b> {selectedCSAboutCourse.location}</p>
                     <p><b>Course Length:</b> {selectedCSAboutCourse.dateRange}</p>
                   </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={() => handleCSAboutModal(false)}>Close</Button>
-                    <Button variant="primary" onClick={() => addCourse(selectedCSAboutCourse.id)}>Check Course</Button>
-                  </Modal.Footer>
                 </Modal.Dialog>
               </Modal>
             </Card.Body>

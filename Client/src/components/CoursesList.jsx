@@ -3,14 +3,14 @@ import { Pagination, Form } from 'react-bootstrap';
 import { Info } from '@mui/icons-material';
 
 
-const CoursesList = ({ courses, addCourse, viewCourse, isSmallView }) => {
+const CoursesList = ({ courses, checkCourse, viewCourse, isSmallView }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = (isSmallView ? 20 : 10);
 
     const handleCheck = (course) => {
         course.checked = !course.checked;
-        addCourse(course, course.checked);
+        checkCourse(course, course.checked);
     };
 
     const renderCourses = () => {
@@ -44,7 +44,8 @@ const CoursesList = ({ courses, addCourse, viewCourse, isSmallView }) => {
                         width: '100%',
                         height: '3rem',
                     }}>
-                        <Form.Check aria-label={`check-course-${course.subject}-${course.courseNumber}-${course.section}`} checked={course.checked} onChange={() => handleCheck(course)} />
+                        <Form.Check aria-label={`check-course-${course.subject}-${course.courseNumber}-${course.section}`}
+                            defaultValue={course.checked} checked={course.checked} onChange={() => handleCheck(course)} />
                         <div style={{ padding: '0px 1rem', display: 'flex', width: '100%', flexDirection: 'column' }}>
                             <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.subject} {course.courseNumber} ({course.section})</p>
                             <p style={{ marginBottom: '0px', fontSize: '14px' }}> {course.title} - {course.instructor}</p>
@@ -53,7 +54,7 @@ const CoursesList = ({ courses, addCourse, viewCourse, isSmallView }) => {
                             <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.days}</p>
                             <p style={{ marginBottom: '0px', fontSize: '14px' }}> {course.time}</p>
                         </div>
-                        <div onClick={() => viewCourse(course.id)} style={{ cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '4px' }}>
+                        <div onClick={() => viewCourse(true, course)} style={{ cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '4px' }}>
                             <Info />
                             About
                         </div>
@@ -114,7 +115,5 @@ const CoursesList = ({ courses, addCourse, viewCourse, isSmallView }) => {
         </div>
     );
 }
-
-
 
 export default CoursesList;
