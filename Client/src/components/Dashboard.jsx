@@ -11,6 +11,11 @@ import Calendar from './Calendar';
 import ScheduleList from './ScheduleList';
 import CoursesList from './CoursesList';
 
+/**
+ * Dashboard component.
+ *
+ * @returns {JSX.Element} The rendered Dashboard component.
+ */
 function Dashboard() {
 
   const [isChangeTermModalOpen, setChangeTermModalOpen] = useState(false);
@@ -54,8 +59,8 @@ function Dashboard() {
     const fetchCourses = async () => {
       const response = await fetch('/api/courses');
       const data = await response.json();
+      setCourses(data.map(course => ({ ...course, checked: false })));
       console.log(data);
-      setCourses(data);
     };
 
     fetchCourses();
@@ -67,6 +72,7 @@ function Dashboard() {
   const [selectedCSInstructor, setSelectedCSInstructor] = useState("");
   const [selectedCSLocation, setSelectedCSLocation] = useState("");
   const [filteredCSCourses, setFilteredCSCourses] = useState([]);
+  const [checkedCSCourses, setCheckedCSCourses] = useState([]);
   const [isCSsearched, setIsCSsearched] = useState(false);
 
   const [selectedCourses, setSelectedCourses] = useState([]); // TODO Save selected courses to local cache so they persist over user sessions
@@ -110,6 +116,33 @@ function Dashboard() {
       && (((selectedCSLocation === "ONLINE") ? (course.location === selectedCSLocation) : (course.location !== "ONLINE")) || (selectedCSLocation === ""))
     ));
   };
+
+  const [isCSAboutModalOpen, setCSAboutModalOpen] = useState(false);
+  const [selectedCSAboutCourse, setSelectedCSAboutCourse] = useState({});
+  const handleCSAboutModal = (open, selectedCourse) => {
+    if (open) {
+      setCSAboutModalOpen(open);
+      setSelectedCSAboutCourse(selectedCourse);
+    } else {
+      setCSAboutModalOpen(open);
+      setSelectedCSAboutCourse({});
+    }
+
+  };
+
+  const checkCourse = (course, isChecked) => {
+    if (isChecked && !checkedCSCourses.includes(course)) {
+      setCheckedCSCourses([...checkedCSCourses, course]);
+    } else if (!isChecked && checkedCSCourses.includes(course)) {
+      setCheckedCSCourses(checkedCSCourses.filter(c => c !== course));
+    }
+  }
+
+  const addCheckedCourses = () => {
+    setSelectedCourses([...selectedCourses, ...checkedCSCourses]);
+    handleCSModal(false);
+  };
+
   const addCourse = (courseID) => {
     setSelectedCourses([...selectedCourses, courses.find(course => course.id === courseID)]);
   }
@@ -168,7 +201,7 @@ function Dashboard() {
             </Card.Title>
             <Card.Body>
               <Button variant="light" size="sm" style={{ width: '100%' }} onClick={() => handleCSModal(true)}>Add course</Button>
-              <Modal size="xl" show={isCourseSelectionModalOpen} onHide={() => handleCSModal(false)} centered>
+              <Modal size="xl" show={isCourseSelectionModalOpen} onHide={() => handleCSModal(false)} backdrop="static" centered>
                 <Modal.Dialog style={{
                   display: 'flex', width: '100%', margin: '0px', fontFamily: 'Inter, sans-serif',
                 }}>
@@ -176,6 +209,7 @@ function Dashboard() {
                     <Modal.Title>Select Course</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
+
                     <InputGroup className="mb-1">
                       <Form.Select aria-label="Subject filter selection" onChange={(e) => handleCSSubject(e.target.value)}>
                         <option value="">Select Subject</option>
@@ -186,6 +220,7 @@ function Dashboard() {
                       </Form.Select>
                       <Form.Control type="number" placeholder="Search by course number" onChange={(e) => handleCSCourseNumber(e.target.value)} />
                     </InputGroup>
+
                     <InputGroup className="mb-1">
                       <Form.Select aria-label="Instructor filter selection" onChange={(e) => handleCSInstructor(e.target.value)}>
                         <option value="">Select Instructor</option>
@@ -194,6 +229,7 @@ function Dashboard() {
                           <option key={id} value={instructor}>{instructor}</option>
                         ))}
                       </Form.Select>
+
                       <Form.Select aria-label="Location filter selection" onChange={(e) => handleCSLocation(e.target.value)}>
                         <option value="">Select Location</option>
                         <option value="ONLINE">Online</option>
@@ -201,24 +237,52 @@ function Dashboard() {
                         <option value="">Both</option>
                       </Form.Select>
                     </InputGroup>
+
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-                      <Button variant="dark" size="md" onClick={handleCSSearch} style={{ width: '8rem', height: '2.5rem' }}>🔎Search</Button>
+                      <Button variant="dark" size="md" onClick={handleCSSearch} style={{ width: '8rem', height: '2.5rem' }}>🔎 Search</Button>
                     </div>
-                    <div style={{ width: '100%', height: '1px', backgroundColor: '#dee2e6', margin: '0.5rem 0' }}></div>
+
+                    <div style={{ width: '100%', height: '1px', backgroundColor: '#dee2e6', margin: '0.5rem 0' }} />
                     <Accordion style={{ width: "100%" }}>
                       <Accordion.Item eventKey="0">
                         <Accordion.Header>Checked Courses</Accordion.Header>
                         <Accordion.Body>
-                          Check a course to add it here!
+                          <CoursesList courses={checkedCSCourses} addCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={true} />
                         </Accordion.Body>
                       </Accordion.Item>
                     </Accordion>
-                    <div style={{ width: '100%', height: '1px', backgroundColor: '#dee2e6', margin: '0.5rem 0' }}></div>
-                    <CoursesList courses={filteredCSCourses} />
+
+                    <div style={{ width: '100%', height: '1px', backgroundColor: '#dee2e6', margin: '0.5rem 0' }} />
+
+                    <CoursesList courses={filteredCSCourses} addCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={false} />
                   </Modal.Body>
+
                   <Modal.Footer>
                     <Button variant="secondary" onClick={() => handleCSModal(false)}>Cancel</Button>
-                    <Button variant="primary" onClick={() => handleCourseSelection(selectedCSCourse)}>Select</Button>
+                    <Button variant="primary" onClick={() => handleCourseSelection(selectedCSCourse)}>Add Checked Courses</Button>
+                  </Modal.Footer>
+                </Modal.Dialog>
+              </Modal>
+
+              <Modal size="md" show={isCSAboutModalOpen} onHide={() => handleCSAboutModal(false)} centered>
+                <Modal.Dialog style={{
+                  display: 'flex', width: '100%', margin: '0px', fontFamily: 'Inter, sans-serif',
+                }}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>
+                      {selectedCSAboutCourse.subject} {selectedCSAboutCourse.courseNumber} ({selectedCSAboutCourse.section}) - {selectedCSAboutCourse.title}
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p><b>Instructor:</b> {selectedCSAboutCourse.instructor}</p>
+                    <p><b>Capacity:</b> {selectedCSAboutCourse.capacity} &emsp; <b>Enrolled:</b> {selectedCSAboutCourse.enrolled} &emsp; <b>Remaining:</b> {selectedCSAboutCourse.remaining}  </p>
+                    <p><b>Credit Hours:</b> {selectedCSAboutCourse.credit}</p>
+                    <p><b>Days:</b> {selectedCSAboutCourse.days} &emsp; <b>Time:</b> {selectedCSAboutCourse.time} &emsp; <b>Location:</b> {selectedCSAboutCourse.location}</p>
+                    <p><b>Course Length:</b> {selectedCSAboutCourse.dateRange}</p>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={() => handleCSAboutModal(false)}>Close</Button>
+                    <Button variant="primary" onClick={() => addCourse(selectedCSAboutCourse.id)}>Check Course</Button>
                   </Modal.Footer>
                 </Modal.Dialog>
               </Modal>

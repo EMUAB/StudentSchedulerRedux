@@ -1,12 +1,17 @@
 import { React, useState } from 'react'
-import { Button, Pagination, Form } from 'react-bootstrap';
-import { Visibility, Info } from '@mui/icons-material';
+import { Pagination, Form } from 'react-bootstrap';
+import { Info } from '@mui/icons-material';
 
 
-const CoursesList = ({ courses, addCourse }) => {
+const CoursesList = ({ courses, addCourse, viewCourse, isSmallView }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
-    const coursesPerPage = 10;
+    const coursesPerPage = (isSmallView ? 20 : 10);
+
+    const handleCheck = (course) => {
+        course.checked = !course.checked;
+        addCourse(course, course.checked);
+    };
 
     const renderCourses = () => {
         const indexOfLastCourse = currentPage * coursesPerPage;
@@ -39,7 +44,7 @@ const CoursesList = ({ courses, addCourse }) => {
                         width: '100%',
                         height: '3rem',
                     }}>
-                        <Form.Check aria-label={`check-course-${course.subject}-${course.courseNumber}-${course.section}`} />
+                        <Form.Check aria-label={`check-course-${course.subject}-${course.courseNumber}-${course.section}`} checked={course.checked} onChange={() => handleCheck(course)} />
                         <div style={{ padding: '0px 1rem', display: 'flex', width: '100%', flexDirection: 'column' }}>
                             <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.subject} {course.courseNumber} ({course.section})</p>
                             <p style={{ marginBottom: '0px', fontSize: '14px' }}> {course.title} - {course.instructor}</p>
@@ -78,17 +83,34 @@ const CoursesList = ({ courses, addCourse }) => {
         );
     }
 
+    const smallView = () => { // Easy rendering for checked courses
+        return (
+            <div style={{ borderRadius: '2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {renderCourses()}
+                {courses.length === 0 && <div style={{ padding: '1rem' }}>Check a course to add it here!</div>}
+            </div>
+        );
+    }
+
+    const bigView = () => {
+        return (
+            <div style={{ borderRadius: '2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {renderCourses()}
+                {courses.length === 0 && <div style={{ padding: '1rem' }}>No courses found</div>}
+                <Pagination style={{ paddingTop: '1rem' }}>
+                    <Pagination.First onClick={() => paginate(1)} />
+                    <Pagination.Prev onClick={() => paginate(currentPage - 1)} />
+                    {pageNumbers}
+                    <Pagination.Next onClick={() => paginate(currentPage + 1)} />
+                    <Pagination.Last onClick={() => paginate(totalPages)} />
+                </Pagination>
+            </div>
+        );
+    }
+
     return (
-        <div style={{ borderRadius: '2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {renderCourses()}
-            {courses.length === 0 && <div style={{ padding: '1rem' }}>No courses found</div>}
-            <Pagination style={{ paddingTop: '1rem' }}>
-                <Pagination.First onClick={() => paginate(1)} />
-                <Pagination.Prev onClick={() => paginate(currentPage - 1)} />
-                {pageNumbers}
-                <Pagination.Next onClick={() => paginate(currentPage + 1)} />
-                <Pagination.Last onClick={() => paginate(totalPages)} />
-            </Pagination>
+        <div>
+            {isSmallView ? smallView() : bigView()}
         </div>
     );
 }
