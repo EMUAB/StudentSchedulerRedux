@@ -86,6 +86,13 @@ function Dashboard() {
     return hours;
   };
 
+  const resetCheckedCourses = () => {
+    for (let course of checkedCSCourses) {
+      course.checked = false;
+    };
+    setCheckedCSCourses([]);
+  };
+
   const handleCSModal = (open) => {
     if (open) {
       setCourseSelectionModalOpen(true);
@@ -95,7 +102,7 @@ function Dashboard() {
       setSelectedCSInstructor("");
       setSelectedCSSubject("");
       setFilteredCSCourses([]);
-      setCheckedCSCourses([]);
+      resetCheckedCourses();
     }
   }
   const handleCSSubject = (subject) => {

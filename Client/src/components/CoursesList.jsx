@@ -8,9 +8,14 @@ const CoursesList = ({ courses, checkCourse, viewCourse, isSmallView }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = (isSmallView ? 20 : 10);
 
-    const handleCheck = (course) => {
+    const handleCheck = (course, checkStatus) => {
         course.checked = !course.checked;
         checkCourse(course, course.checked);
+    };
+
+    const isCourseChecked = (courseIn) => {
+        let tempcourse = courses.find(course => course === courseIn);
+        return tempcourse.checked;
     };
 
     const renderCourses = () => {
@@ -44,8 +49,10 @@ const CoursesList = ({ courses, checkCourse, viewCourse, isSmallView }) => {
                         width: '100%',
                         height: '3rem',
                     }}>
-                        <Form.Check aria-label={`check-course-${course.subject}-${course.courseNumber}-${course.section}`}
-                            defaultValue={course.checked} checked={course.checked} onChange={() => handleCheck(course)} />
+                        <Form.Check type={"checkbox"} >
+                            <Form.Check.Input aria-label={`check-course-${course.subject}-${course.courseNumber}-${course.section}`}
+                                checked={course.checked} onChange={(e) => handleCheck(course, e.target.checked)} />
+                        </Form.Check>
                         <div style={{ padding: '0px 1rem', display: 'flex', width: '100%', flexDirection: 'column' }}>
                             <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.subject} {course.courseNumber} ({course.section})</p>
                             <p style={{ marginBottom: '0px', fontSize: '14px' }}> {course.title} - {course.instructor}</p>
