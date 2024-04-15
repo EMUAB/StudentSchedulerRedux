@@ -174,7 +174,7 @@ export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourse 
                         <p style={{ marginBottom: '0px', fontSize: '14px' }}> {course.title}</p>
                     </div>
 
-                    <div style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'bottom', marginLeft: 'auto', marginRight: '0.8rem' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '0.8rem' }}>
                         <p style={{ margin: '1rem 0 0 0', fontSize: '20px' }}>{course.credit}</p>
                         <p style={{ margin: '-0.4rem 0 1rem 0', fontSize: '12px' }}>Hours</p>
                     </div>
