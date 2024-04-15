@@ -4,7 +4,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import "./Dashboard.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DashNavbar from "./Navbar";
-import { Button, Card, Form, Modal } from "react-bootstrap";
+import { Button, Card, Form, Modal, InputGroup, Accordion } from "react-bootstrap";
 import { possibleSchedData, possibleTerms } from "./possible-sched-data";
 import { logout } from '../AuthService';
 import Calendar from './Calendar';
@@ -51,11 +51,10 @@ function Dashboard() {
 
   const [courses, setCourses] = useState([]);
   useEffect(() => {
-    // Fetch courses from your backend
     const fetchCourses = async () => {
-      const response = await fetch('/api/courses'); // Adjust endpoint as necessary
+      const response = await fetch('/api/courses');
       const data = await response.json();
-      console.log(data); // Print data to console
+      console.log(data);
       setCourses(data);
     };
 
@@ -66,7 +65,10 @@ function Dashboard() {
   const [selectedCSSubject, setSelectedCSSubject] = useState("");
   const [selectedCSCourse, setSelectedCSCourse] = useState("");
   const [selectedCSInstructor, setSelectedCSInstructor] = useState("");
+  const [selectedCSLocation, setSelectedCSLocation] = useState("");
   const [filteredCSCourses, setFilteredCSCourses] = useState([]);
+  const [isCSsearched, setIsCSsearched] = useState(false);
+
   const [selectedCourses, setSelectedCourses] = useState([]); // TODO Save selected courses to local cache so they persist over user sessions
 
   const calculateHours = () => {
@@ -91,22 +93,26 @@ function Dashboard() {
   const handleCSSubject = (subject) => {
     setSelectedCSSubject(subject);
   };
-  const handleCSCourse = (course) => {
-    setSelectedCSCourse(course);
-  };
   const handleCSInstructor = (instructor) => {
     setSelectedCSInstructor(instructor);
   };
-  const handleCSSearch = () => {
-
+  const handleCSLocation = (location) => {
+    setSelectedCSLocation(location);
+  };
+  const handleCSCourseNumber = (number) => {
+    setSelectedCSCourse(number);
+  };
+  const handleCSSearch = () => { // TODO Ideally have this rely on different SQL queries, but update this as necessary
     setFilteredCSCourses(courses.filter(course => (
       (course.subject === selectedCSSubject) || (selectedCSSubject === ""))
       && ((course.instructor === selectedCSInstructor) || (selectedCSInstructor === ""))
+      && ((course.courseNumber === selectedCSCourse) || (selectedCSCourse === ""))
+      && (((selectedCSLocation === "ONLINE") ? (course.location === selectedCSLocation) : (course.location !== "ONLINE")) || (selectedCSLocation === ""))
     ));
   };
-
-
-
+  const addCourse = (courseID) => {
+    setSelectedCourses([...selectedCourses, courses.find(course => course.id === courseID)]);
+  }
 
   return (
     <div className="Dashboard">
@@ -162,7 +168,7 @@ function Dashboard() {
             </Card.Title>
             <Card.Body>
               <Button variant="light" size="sm" style={{ width: '100%' }} onClick={() => handleCSModal(true)}>Add course</Button>
-              <Modal size="lg" show={isCourseSelectionModalOpen} onHide={() => handleCSModal(false)} centered>
+              <Modal size="xl" show={isCourseSelectionModalOpen} onHide={() => handleCSModal(false)} centered>
                 <Modal.Dialog style={{
                   display: 'flex', width: '100%', margin: '0px', fontFamily: 'Inter, sans-serif',
                 }}>
@@ -170,21 +176,44 @@ function Dashboard() {
                     <Modal.Title>Select Course</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <InputGroup className="mb-1">
                       <Form.Select aria-label="Subject filter selection" onChange={(e) => handleCSSubject(e.target.value)}>
                         <option value="">Select Subject</option>
+                        <option value="">Any Subject</option>
                         {Array.from(new Set(courses.map(course => course.subject))).map((subject, id) => (
                           <option key={id} value={subject}>{subject}</option>
                         ))}
                       </Form.Select>
+                      <Form.Control type="number" placeholder="Search by course number" onChange={(e) => handleCSCourseNumber(e.target.value)} />
+                    </InputGroup>
+                    <InputGroup className="mb-1">
                       <Form.Select aria-label="Instructor filter selection" onChange={(e) => handleCSInstructor(e.target.value)}>
                         <option value="">Select Instructor</option>
+                        <option value="">Any Instructor</option>
                         {Array.from(new Set(courses.map(course => course.instructor))).map((instructor, id) => (
                           <option key={id} value={instructor}>{instructor}</option>
                         ))}
                       </Form.Select>
+                      <Form.Select aria-label="Location filter selection" onChange={(e) => handleCSLocation(e.target.value)}>
+                        <option value="">Select Location</option>
+                        <option value="ONLINE">Online</option>
+                        <option value="INPERSON">In-person</option>
+                        <option value="">Both</option>
+                      </Form.Select>
+                    </InputGroup>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+                      <Button variant="dark" size="md" onClick={handleCSSearch} style={{ width: '8rem', height: '2.5rem' }}>🔎Search</Button>
                     </div>
-                    <Button variant="dark" size="md" onClick={handleCSSearch}>🔎Search</Button>
+                    <div style={{ width: '100%', height: '1px', backgroundColor: '#dee2e6', margin: '0.5rem 0' }}></div>
+                    <Accordion style={{ width: "100%" }}>
+                      <Accordion.Item eventKey="0">
+                        <Accordion.Header>Checked Courses</Accordion.Header>
+                        <Accordion.Body>
+                          Check a course to add it here!
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    </Accordion>
+                    <div style={{ width: '100%', height: '1px', backgroundColor: '#dee2e6', margin: '0.5rem 0' }}></div>
                     <CoursesList courses={filteredCSCourses} />
                   </Modal.Body>
                   <Modal.Footer>
@@ -206,7 +235,7 @@ function Dashboard() {
         </div>
 
         <div className="schedules-container" style={{ display: 'flex', marginTop: '1rem', marginBottom: '1rem', textAlign: 'left' }}>
-          <Card style={{ width: '100%', marginRight: '0.5rem', marginLeft: '1rem', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: "#1b604a", color: "#fff" }}>
+          <Card style={{ width: '100%', marginRight: '0.5rem', marginLeft: '1rem', boxShadow: '0px 4px 8px rgba</div>(0, 0, 0, 0.1)', backgroundColor: "#1b604a", color: "#fff" }}>
             <Card.Body>
               <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>Chosen Schedule</Card.Title>
               <Card.Text>
