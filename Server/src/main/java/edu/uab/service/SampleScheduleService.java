@@ -18,8 +18,16 @@ public class SampleScheduleService {
         this.repository = repository;
     }
 
+        public List<SampleScheduleModel> findAllDepartments() {
+        List<SampleScheduleModel> departments = repository.findAll();
+        System.out.println(departments.getFirst());
+        return departments;
+    }
+
+
     public List<SampleScheduleModel.Course> getCoursesBySemester(String departmentId, String academicYear,
             String semesterName) {
+        //could add null checks here
         return repository.findByDepartmentId(departmentId)
                 .map(schedule -> schedule.getAcademicYears().get(academicYear))
                 .map(year -> year.getSemesters().get(semesterName))
