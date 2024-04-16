@@ -20,6 +20,7 @@ function Dashboard() {
 
   const [isChangeTermModalOpen, setChangeTermModalOpen] = useState(false);
   const [isPreviewScheduleModalOpen, setPreviewScheduleModalOpen] = useState(false);
+  const [selectedPreviewSchedule, setSelectedPreviewSchedule] = useState({});
   const [advisorName, setAdvisorName] = useState("John Doe");
   const [events, setEvents] = useState([
     {
@@ -34,6 +35,15 @@ function Dashboard() {
   const [selectedSchedule, setSelectedSchedule] = useState(possibleSchedData.schedules[0]); // TODO Convert this to be an array of courses from the fetched data
   const [selectedTerm, setSelectedTerm] = useState(terms[0]);
   const [tempTermID, setTempTermID] = useState(terms[0]);
+
+  const handleSchedulePreviewModal = (open, previewedSchedule) => {
+    if (open) {
+      setPreviewScheduleModalOpen(true);
+      setSelectedPreviewSchedule(previewedSchedule);
+    } else {
+      setPreviewScheduleModalOpen(false);
+    }
+  };
 
   const closeChangeTermModal = (isTermChanged) => {
     if (isTermChanged) {
@@ -166,6 +176,16 @@ function Dashboard() {
     setSelectedCourses([...selectedCourses, courses.find(course => course.id === courseID)]);
   }
 
+  const [currentSchedule, setCurrentSchedule] = useState([]);
+  const [possibleSchedules, setPossibleSchedules] = useState([]);
+
+  const generatePossibleSchedules = () => {
+    // TODO Generate possible schedules based on selected courses
+    // TODO Condense sections into single courses (if we want to do that)
+    setPossibleSchedules(selectedCourses);
+  }
+
+
   return (
     <div className="Dashboard">
       <DashNavbar logout={handleLogout} />
@@ -218,7 +238,7 @@ function Dashboard() {
                 <p style={{ fontSize: '12px', marginBottom: '0px', paddingRight: '0.2rem', paddingLeft: '0.2rem', fontWeight: 'normal' }}>Credit Hours</p>
               </div>
             </Card.Title>
-            <Card.Body style={{paddingTop: '0.4rem'}}>
+            <Card.Body style={{ paddingTop: '0.4rem' }}>
               <SelectedCourseList selectedCourses={selectedCourses} removeCourses={removeSelectedCourses} viewCourse={handleCSAboutModal} />
               <Button variant="light" size="sm" style={{ width: '100%' }} onClick={() => handleCSModal(true)}><Add />Add course</Button>
               <Modal size="xl" show={isCourseSelectionModalOpen} onHide={() => handleCSModal(false)} backdrop="static" centered>
@@ -318,20 +338,18 @@ function Dashboard() {
           <Card style={{ width: '100%', marginRight: '0.5rem', marginLeft: '1rem', boxShadow: '0px 4px 8px rgba</div>(0, 0, 0, 0.1)', backgroundColor: "#1b604a", color: "#fff" }}>
             <Card.Body>
               <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>Chosen Schedule</Card.Title>
-              <Card.Text>
-                No schedule chosen!
-              </Card.Text>
+              {selectedCourses.length > 1 ? <Calendar courses={selectedCourses}/> : <Card.Text>  No schedule chosen! </Card.Text>}
             </Card.Body>
           </Card>
           <Card style={{ width: '100%', marginRight: '1rem', marginLeft: '0.5rem', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: "#1b604a", color: "#fff" }}>
             <Card.Body>
               <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold', display: 'flex' }}>
                 <p style={{ marginBottom: '4px' }}>Possible Schedules</p>
-                <Button variant="light" size="sm" style={{ marginLeft: 'auto', alignSelf: 'flex-start' }} href="#">
+                <Button variant="light" size="sm" style={{ marginLeft: 'auto', alignSelf: 'flex-start' }} onClick={generatePossibleSchedules}>
                   <Refresh /> Refresh
                 </Button>
               </Card.Title>
-              <ScheduleList setModal={setPreviewScheduleModalOpen} />
+              {selectedCourses.length > 0 ? <ScheduleList setModal={setPreviewScheduleModalOpen} coursesToPreview={selectedCourses} /> : <Card.Text>No courses selected!</Card.Text>}
               <Modal size="xl" show={isPreviewScheduleModalOpen} onHide={() => setPreviewScheduleModalOpen(false)} centered>
                 <Modal.Dialog style={{
                   display: 'flex', width: '100%', margin: '0px', fontFamily: 'Inter, sans-serif',
@@ -340,7 +358,7 @@ function Dashboard() {
                     <Modal.Title>Preview Schedule</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    <Calendar />
+                    <Calendar courses={selectedCourses} />
                   </Modal.Body>
                   <Modal.Footer>
                     <Button variant="primary" onClick={() => setSelectedSchedule(null)}>Choose Schedule</Button>
