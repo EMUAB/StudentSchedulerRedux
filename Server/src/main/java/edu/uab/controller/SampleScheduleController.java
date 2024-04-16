@@ -22,13 +22,10 @@ public class SampleScheduleController {
     }
 
         @GetMapping
-    public ResponseEntity<List<SampleScheduleModel>> getAllCourses() {
+    public ResponseEntity<List<SampleScheduleModel>> getAllDepartments() {
         List<SampleScheduleModel> departments = sampleScheduleService.findAllDepartments();
         return ResponseEntity.ok(departments);
     }
-
-
-
 
     @GetMapping("/{departmentId}/semesters/{academicYear}/{semesterName}/courses")
     public ResponseEntity<List<SampleScheduleModel.Course>> getCoursesBySemester(
