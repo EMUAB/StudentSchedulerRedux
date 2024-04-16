@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/departments")
@@ -21,11 +22,32 @@ public class SampleScheduleController {
         this.sampleScheduleService = sampleScheduleService;
     }
 
-        @GetMapping
+    @GetMapping
     public ResponseEntity<List<SampleScheduleModel>> getAllDepartments() {
         List<SampleScheduleModel> departments = sampleScheduleService.findAllDepartments();
         return ResponseEntity.ok(departments);
     }
+
+    @GetMapping("/{departmentId}")
+    public ResponseEntity<SampleScheduleModel> getDepartmentById(
+            @PathVariable("departmentId") String departmentId) {
+        Optional<SampleScheduleModel> department = sampleScheduleService.findDepartment(departmentId);
+        return department.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    //@shak this needs fixing
+    // I'm not the most skilled database person but this should be close
+//    @GetMapping("/{departmentId}/semesters")
+//    public ResponseEntity<List<SampleScheduleModel.AcademicYear>> getAcademicYear(
+//            @PathVariable("departmentId") String departmentId) {
+//        List<SampleScheduleModel.AcademicYear> years = sampleScheduleService.findAcademicYears(departmentId);
+//        if (!years.isEmpty()) {
+//            return ResponseEntity.ok(years);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+
 
     @GetMapping("/{departmentId}/semesters/{academicYear}/{semesterName}/courses")
     public ResponseEntity<List<SampleScheduleModel.Course>> getCoursesBySemester(
