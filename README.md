@@ -19,7 +19,7 @@ Repository for CS499 Capstone Project
 - `cd Client`
 - `npm i --omit=optional`
 - `npm start`
-- Open [http://localhost:3000](http://localhost:3000)
+- Open [http://localhost:3000](http://localhost:5173)
 
 ## To Run (Mac/Linux)
 # Vaishak needs to fix
@@ -34,4 +34,4 @@ Repository for CS499 Capstone Project
 - `npm install`
 - (If needed) `npm audit fix --force`
 - `npm start`
-- Open [http://localhost:3000](http://localhost:3000)
+- Open [http://localhost:3000](http://localhost:5173)
