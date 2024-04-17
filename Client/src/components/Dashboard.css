@@ -5,6 +5,17 @@
      width: 100%;
  }
 
+ .Dashboard {
+     background-color: #0f3b2d;
+     font-family: Inter, sans-serif;
+     height: 100vh;
+     width: 100%;
+ }
+
+ button.accordion-button {
+     padding: 0.6rem 0.8rem;
+ }
+
  .Calendar {
      background-color: whitesmoke;
  }
