@@ -1,5 +1,5 @@
 # Student Scheduler Redux
-Repository for CS499 Capstone Project
+Repository for CS499 Capstone Project SPRING2024
 
 ## Dependencies
 - Java JDK21.0.2
