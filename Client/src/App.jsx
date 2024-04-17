@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { isAuthenticated, login, getToken } from './AuthService';
-import AdminPage from './AdminPage.jsx';
+import AdminPage from './components/AdminPage.jsx';
 
 const App = () => {
   const [token, setToken] = useState('');
