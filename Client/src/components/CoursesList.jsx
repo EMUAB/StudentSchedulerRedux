@@ -3,7 +3,7 @@ import { Pagination, Form, Button } from 'react-bootstrap';
 import { Info, CalendarMonth } from '@mui/icons-material';
 
 
-export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallView }) => {
+export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallView, isGeneralView }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = (isSmallView ? 20 : 10);
@@ -16,10 +16,12 @@ export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallVie
     const renderCourses = () => {
         const indexOfLastCourse = currentPage * coursesPerPage;
         const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+
         const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
 
         const courseElements = [];
         currentCourses.forEach(course => {
+            console.log(course);
             courseElements.push(
                 <div
                     style={{
@@ -33,7 +35,7 @@ export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallVie
                         marginBottom: '2px',
                         width: '100%',
                     }}
-                    key={course.id}
+                    key={isGeneralView ? course.title + course.courseNumber : course.id}
                 >
                     <div style={{
                         overflow: 'hidden',
@@ -44,21 +46,31 @@ export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallVie
                         width: '100%',
                         height: '3rem',
                     }}>
-                        <Form.Check type={"checkbox"} >
-                            <Form.Check.Input aria-label={`check-course-${course.subject}-${course.courseNumber}-${course.section}`}
-                                checked={course.checked} onChange={(e) => handleCheck(course, e.target.checked)} />
-                        </Form.Check>
+                        {isGeneralView ?
+                            <Form.Check type={"checkbox"} >
+                                <Form.Check.Input aria-label={`check-course-${course.title}`}
+                                    checked={course.checked} onChange={(e) => handleCheck(course, e.target.checked)} />
+                            </Form.Check>
+                            : null}
+
                         <div style={{ padding: '0px 1rem', display: 'flex', width: '100%', flexDirection: 'column' }}>
-                            <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.subject} {course.courseNumber} ({course.section})</p>
-                            <p style={{ marginBottom: '0px', fontSize: '14px' }}> {course.title} - {course.instructor}</p>
+                            <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.subject} {course.courseNumber} {isGeneralView ? null : `(${course.section})`} </p>
+                            <p style={{ marginBottom: '0px', fontSize: '14px' }}> {isGeneralView ? course.title : null} {isGeneralView ? null : course.instructor} </p>
                         </div>
-                        <div style={{ width: '30%' }}>
-                            <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.days}</p>
-                            <p style={{ marginBottom: '0px', fontSize: '14px' }}> {course.time}</p>
-                        </div>
+                        {isGeneralView ? null
+                            : <>
+                                <div style={{ width: '100%' }}>
+                                    <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.days}</p>
+                                    <p style={{ marginBottom: '0px', fontSize: '14px' }}> {course.time}</p>
+                                </div>
+                                <div>
+                                    <p style={{ marginBottom: '-4px', fontSize: '20px', paddingRight: '3rem' }}> {course.credit}</p>
+                                    <p style={{ marginBottom: '0px', fontSize: '14px' }}> Hours</p>
+                                </div>
+                            </>}
                         <div onClick={() => viewCourse(true, course)} style={{ cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '4px' }}>
-                            <Info />
-                            About
+                            {isGeneralView ? <><CalendarMonth />Times</> : <><Info /> About</>}
+
                         </div>
                     </div>
                 </div>
@@ -90,7 +102,7 @@ export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallVie
         return (
             <div style={{ borderRadius: '2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {renderCourses()}
-                {courses.length === 0 && <div style={{ padding: '1rem' }}>Check a course to add it here!</div>}
+                {courses.length === 0 ? <div style={{ padding: '1rem' }}>Check a course to add it here!</div> : null}
             </div>
         );
     }
@@ -153,7 +165,7 @@ export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourse 
                     marginBottom: '2px',
                     width: '100%',
                 }}
-                key={course.id}
+                key={course.title + course.courseNumber}
             >
                 <div style={{
                     overflow: 'hidden',
@@ -170,11 +182,11 @@ export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourse 
                             onChange={(e) => markCourseForRemoval(course.id, e.target.checked)} />
                     </Form.Check>
                     <div style={{ padding: '0px 1rem 0 0.5rem', display: 'flex', width: '100%', flexDirection: 'column' }}>
-                        <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.subject} {course.courseNumber} ({course.section})</p>
+                        <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.subject} {course.courseNumber}</p>
                         <p style={{ marginBottom: '0px', fontSize: '14px' }}> {course.title}</p>
                     </div>
 
-                    <div style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'bottom', marginLeft: 'auto', marginRight: '0.8rem' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '0.8rem' }}>
                         <p style={{ margin: '1rem 0 0 0', fontSize: '20px' }}>{course.credit}</p>
                         <p style={{ margin: '-0.4rem 0 1rem 0', fontSize: '12px' }}>Hours</p>
                     </div>
