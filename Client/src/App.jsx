@@ -12,7 +12,7 @@ const App = () => {
     // console.log(token);
     login(token);
     setToken(token);
-    navigateTo('/');
+    navigateTo('/student');
   }
 
   const navigateTo = useNavigate();
@@ -22,14 +22,14 @@ const App = () => {
     if (!isAuthenticated()) {
       navigateTo('/login');
     } else {
-      navigateTo('/');
+      navigateTo('/student');
     }
   }, [navigateTo]);
 
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/student" element={<Dashboard />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
       </Routes>
     </div>
