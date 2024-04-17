@@ -3,3 +3,11 @@ spring:
     mongodb:
       uri: mongodb+srv://admin:${MONGO_DB_PASSWORD}@main-cluster.tzkisie.mongodb.net/?retryWrites=true&w=majority&appName=main-cluster
       database: scheduler
+
+logging:
+  file:
+    name: application.log
+  level:
+    org:
+      springframework:
+        web: DEBUG

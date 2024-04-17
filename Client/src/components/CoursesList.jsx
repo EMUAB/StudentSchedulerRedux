@@ -35,6 +35,10 @@ export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallVie
                     }}
                     key={course.id}
                 >
+                    <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingLeft: '4px', paddingRight: '8px' }}>
+                        {course.courseNumber} - {course.title} - {course.section} - {course.instructor} - {course.time}
+                        <Button variant="primary" size="sm" style={{ marginLeft: 'auto', marginRight: '4px' }}>Add</Button>
+
                     <div style={{
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',

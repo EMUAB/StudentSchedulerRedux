@@ -26,7 +26,7 @@ Repository for CS499 Capstone Project
 ### Backend
 - `cd Server`
 - `mvn package`
-- `java -jar target\StudentSchedulerRedux-0.0.1-SNAPSHOT.jar`
+- `java -jar target/StudentSchedulerRedux-0.0.1-SNAPSHOT.jar`
 - Open [http://localhost:8080](http://localhost:8080)
 
 ### Frontend

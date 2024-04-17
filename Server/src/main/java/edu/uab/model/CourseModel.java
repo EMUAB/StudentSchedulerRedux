@@ -179,7 +179,7 @@ public class CourseModel {
     @Override
     public String toString() {
         return String.format(
-                "Course [CRN: %s, Subject: %s, Course Number: %s, Section: %s, Title: %s, Credit: %s, Days: %s, Time: %s, Capacity: %s, Enrolled: %s, Remaining: %s, Instructor: %s, Date Range: %s, Location: %s]",
+                "Course [CRN: %s, Subject: %s, CourseNumber: %s, Section: %s, Title: %s, Credit: %s, Days: %s, Time: %s, Capacity: %s, Enrolled: %s, Remaining: %s, Instructor: %s, DateRange: %s, Location: %s]",
                 CRN, Subject, CourseNumber, Section, Title, Credit, Days, Time, Capacity, Enrolled, Remaining,
                 Instructor, DateRange, Location);
     }
