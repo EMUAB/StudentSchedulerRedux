@@ -33,10 +33,10 @@ build/
 .vscode/
 
 ### Node ###
-/Client/node_modules
+Client/node_modules
 
 ### Other ###
-/Server/application.log
+Server/*.log
 WebScraper/
 WebScraper/*
 serverstarters/
