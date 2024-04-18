@@ -29,7 +29,7 @@ export const Login = ({ onLogin }) => {
           </div>
           <div className="field-container">
             <label htmlFor="password">Password</label>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="********" id="password" name="password" />
+            <input value={password} onChange={(e) => setPassword(e.target.value)} onKeyUp={(e) => (e.key === "Enter" ? handleSubmit(e) : null)} type="password" placeholder="********" id="password" name="password" />
           </div>
           <div className="field-container">
             <Button variant="success" onClick={handleSubmit}>Log In</Button>
