@@ -48,21 +48,32 @@ public class SampleScheduleModel {
     }
 
     public static class AcademicYear {
-        // Map of semesters, where key is "Fall" or "Spring"
-        private Map<String, List<Course>> semesters;
+        private List<Course> Fall;
+        private List<Course> Spring;
 
-        public Map<String, List<Course>> getSemesters() {
-            return semesters;
+        // Constructors, getters, and setters for fallCourses and springCourses
+
+        public List<Course> getFallCourses() {
+            return Fall;
         }
 
-        public void setSemesters(Map<String, List<Course>> semesters) {
-            this.semesters = semesters;
+        public void setFallCourses(List<Course> fallCourses) {
+            this.Fall = fallCourses;
+        }
+
+        public List<Course> getSpringCourses() {
+            return Spring;
+        }
+
+        public void setSpringCourses(List<Course> springCourses) {
+            this.Spring = springCourses;
         }
 
         @Override
         public String toString() {
             return "AcademicYear{" +
-                    "semesters=" + semesters +
+                    "fallCourses=" + Fall +
+                    ", springCourses=" + Spring +
                     '}';
         }
     }

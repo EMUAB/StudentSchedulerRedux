@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,12 +37,12 @@ public class SampleScheduleService {
 
 
 
-    public List<SampleScheduleModel.Course> getCoursesBySemester(String departmentId, String academicYear,
-                                                                 String semesterName) {
-        //could add null checks here
-        return repository.findByDepartmentId(departmentId)
-                .map(schedule -> schedule.getAcademicYears().get(academicYear))
-                .map(year -> year.getSemesters().get(semesterName))
-                .orElseGet(Collections::emptyList); // Use orElseGet for a supplier that doesn't throw exceptions
-    }
+    // public List<SampleScheduleModel.Course> getCoursesBySemester(String departmentId, String academicYear,
+    //                                                              String semesterName) {
+    //     //could add null checks here
+    //     return repository.findByDepartmentId(departmentId)
+    //             .map(schedule -> schedule.getAcademicYears().get(academicYear))
+    //             .map(year -> year.getSemesters().get(semesterName))
+    //             .orElseGet(Collections::emptyList); // Use orElseGet for a supplier that doesn't throw exceptions
+    // }
 }
