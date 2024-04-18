@@ -1,5 +1,5 @@
 # Student Scheduler Redux
-Repository for CS499 Capstone Project
+Repository for CS499 Capstone Project SPRING2024
 
 ## Dependencies
 - Java JDK21.0.2
@@ -8,7 +8,6 @@ Repository for CS499 Capstone Project
 - MongoDB 7.0.6
 
 ## To Run (Windows)
-# Vaishak needs to fix
 ### Backend
 - `cd Server`
 - `mvn package`
@@ -19,10 +18,9 @@ Repository for CS499 Capstone Project
 - `cd Client`
 - `npm i --omit=optional`
 - `npm start`
-- Open [http://localhost:3000](http://localhost:3000)
+- Open [http://localhost:5173](http://localhost:5173)
 
 ## To Run (Mac/Linux)
-# Vaishak needs to fix
 ### Backend
 - `cd Server`
 - `mvn package`
@@ -34,4 +32,4 @@ Repository for CS499 Capstone Project
 - `npm install`
 - (If needed) `npm audit fix --force`
 - `npm start`
-- Open [http://localhost:3000](http://localhost:3000)
+- Open [http://localhost:5173](http://localhost:5173)

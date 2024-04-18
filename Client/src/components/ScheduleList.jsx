@@ -1,19 +1,16 @@
 import { React, useState } from 'react'
-import { possibleSchedData } from "./possible-sched-data";
 import { Visibility } from '@mui/icons-material';
 
 
-const viewSchedule = (scheduleID, setModal) => {
-    console.log('Viewing schedule', scheduleID);
-    // TODO - add schedule viewing modal
-    setModal(true);
+const viewSchedule = (courses, setModal) => {
+    setModal(true, courses);
 };
 
-const ScheduleList = ({setModal}) => {
-    const [possibleSchedules, setPossibleSchedules] = useState(possibleSchedData.schedules);
+const ScheduleList = ({ setModal, possibleSchedules }) => {
 
     const renderSchedules = () => {
         const scheduleElements = [];
+        let i = 0;
         possibleSchedules.forEach(schedule => {
             scheduleElements.push(
                 <div
@@ -28,12 +25,12 @@ const ScheduleList = ({setModal}) => {
                         marginBottom: '8px',
                         height: '3em'
                     }}
-                    key={schedule.id}
+                    key={i++}
                 >
                     <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingLeft: '4px', paddingRight: '8px' }}>
-                        {schedule.courseIds.join(', ')}
+                        {schedule.map(course => course.crn).join(', ')}
                     </div>
-                    <div onClick={() => viewSchedule(schedule.id, setModal)} style={{ cursor: 'pointer', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', paddingRight: '4px' }}>
+                    <div onClick={() => setModal(true, schedule)} style={{ cursor: 'pointer', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', paddingRight: '4px' }}>
                         <Visibility />
                         View
                     </div>
