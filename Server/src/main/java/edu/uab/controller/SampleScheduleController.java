@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/departments")
+@RequestMapping("/sampleSchedule")
 @CrossOrigin(origins = "http://localhost:5173")
 public class SampleScheduleController {
 
@@ -49,19 +49,19 @@ public class SampleScheduleController {
 //    }
 
 
-    @GetMapping("/{departmentId}/semesters/{academicYear}/{semesterName}/courses")
-    public ResponseEntity<List<SampleScheduleModel.Course>> getCoursesBySemester(
-            @PathVariable("departmentId") String departmentId,
-            @PathVariable("academicYear") String academicYear,
-            @PathVariable("semesterName") String semesterName) {
+    // @GetMapping("/{departmentId}/semesters/{academicYear}/{semesterName}/courses")
+    // public ResponseEntity<List<SampleScheduleModel.Course>> getCoursesBySemester(
+    //         @PathVariable("departmentId") String departmentId,
+    //         @PathVariable("academicYear") String academicYear,
+    //         @PathVariable("semesterName") String semesterName) {
 
-        List<SampleScheduleModel.Course> courses = sampleScheduleService.getCoursesBySemester(departmentId,
-                academicYear, semesterName);
+    //     List<SampleScheduleModel.Course> courses = sampleScheduleService.getCoursesBySemester(departmentId,
+    //             academicYear, semesterName);
 
-        if (courses.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+    //     if (courses.isEmpty()) {
+    //         return ResponseEntity.notFound().build();
+    //     }
 
-        return ResponseEntity.ok(courses);
-    }
+    //     return ResponseEntity.ok(courses);
+    // }
 }
