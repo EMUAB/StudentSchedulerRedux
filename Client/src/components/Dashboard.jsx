@@ -10,6 +10,8 @@ import { logout } from '../AuthService';
 import Calendar from './Calendar';
 import ScheduleList from './ScheduleList';
 import { CSModalCourseList, SelectedCourseList } from './CoursesList';
+import { getToken } from '../AuthService';
+import { sampleLogins } from './sample-data';
 
 /**
  * Dashboard component.
@@ -22,7 +24,6 @@ function Dashboard() {
   const [isPreviewScheduleModalOpen, setPreviewScheduleModalOpen] = useState(false);
 
   const [selectedPreviewSchedule, setSelectedPreviewSchedule] = useState({});
-  const [advisorName, setAdvisorName] = useState("John Doe");
   const [events, setEvents] = useState([
     {
       start: moment().toDate(),
@@ -58,8 +59,12 @@ function Dashboard() {
     window.location.reload();
   }
 
+  const userInfo = (sampleLogins.users.find(user => user.id === getToken()) || {});
+  const advisorName = (sampleLogins.users.find(user => user.id === userInfo.advisor) || {}).name;
+
   const [courses, setCourses] = useState([]);
   const [generalCourses, setGeneralCourses] = useState([]);
+
   useEffect(() => {
     const fetchCourses = async () => {
       const response = await fetch('/api/courses');
@@ -211,14 +216,13 @@ function Dashboard() {
         }
       }
     });
-    console.log(combinations)
     setPossibleSchedules(combinations);
   }
 
 
   return (
     <div className="Dashboard">
-      <DashNavbar logout={handleLogout} />
+      <DashNavbar logout={handleLogout} userName={userInfo.name} />
       <div className="card-divs">
         <div className="top-link-card-container" style={{ display: 'flex', marginTop: '1rem', marginBottom: '1rem', textAlign: 'left' }}>
           <Card style={{ width: '18rem', marginRight: '1rem', marginLeft: '1rem', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: "#1b604a", color: "#fff" }}>

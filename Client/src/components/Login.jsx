@@ -5,12 +5,15 @@ import './Login.css';
 export const Login = ({ onLogin }) => {
   const [blazerID, setBlazerID] = useState('');
   const [password, setPassword] = useState('');
+  const [showError, setShowError] = useState('none');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log(blazerID);
     // console.log(password);
-    onLogin(blazerID, password);
+    if (!onLogin(blazerID, password)) {
+      setShowError('block');
+    };
   }
 
 
@@ -30,6 +33,7 @@ export const Login = ({ onLogin }) => {
           <div className="field-container">
             <label htmlFor="password">Password</label>
             <input value={password} onChange={(e) => setPassword(e.target.value)} onKeyUp={(e) => (e.key === "Enter" ? handleSubmit(e) : null)} type="password" placeholder="********" id="password" name="password" />
+            <p style={{color: 'red', display:showError}}>Invalid username/password</p>
           </div>
           <div className="field-container">
             <Button variant="success" onClick={handleSubmit}>Log In</Button>
