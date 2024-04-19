@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Modal, Form, InputGroup } from 'react-bootstrap';
 import DashNavbar from './Navbar';
-import { CSModalCourseList, SelectedCourseList } from './CoursesList';
+import { CSModalCourseList } from './CoursesList';
 import { logout } from '../AuthService';
 
 // Bruh moment
@@ -56,11 +56,11 @@ const AdminPage = () => {
     };
 
     const handleCourseSave = async () => {
-        let apiUrl = '/api/courses/'; 
+        let apiUrl = '/api/courses/';
         let method = 'POST';
         let body = JSON.stringify(currentCourse);
         const headers = { 'Content-Type': 'application/json' };
-        
+
         if (courseDialogMode !== 'add') {
             apiUrl += `/${currentCourse.id}`;
             method = courseDialogMode === 'edit' ? 'PUT' : 'DELETE';
@@ -73,7 +73,7 @@ const AdminPage = () => {
                 await fetchCourses();
                 setShowCourseDialog(false);
             } else {
-                const errorBody = await response.json(); 
+                const errorBody = await response.json();
                 throw new Error(errorBody.message || 'Failed to perform the operation');
             }
         } catch (error) {
@@ -111,9 +111,14 @@ const AdminPage = () => {
         setCurrentCourse(course);
     };
 
+    const handleLogout = () => {
+        logout();
+        window.location.href = '/';
+    }
+
     return (
         <div className="AdminPage">
-            <DashNavbar logout={logout}/>
+            <DashNavbar logout={handleLogout} />
             <div className="hello-container" style={{
                 backgroundColor: '#1e6b52',
                 color: '#fff',
@@ -133,7 +138,7 @@ const AdminPage = () => {
                     </Card.Body>
                 </Card>
                 <Modal size="xl" show={isCourseSelectionModalOpen} onHide={() => handleCourseModal(false)}
-                       backdrop="static" centered>
+                    backdrop="static" centered>
                     <Modal.Header closeButton>
                         <Modal.Title>Edit Courses</Modal.Title>
                     </Modal.Header>
@@ -146,7 +151,7 @@ const AdminPage = () => {
                                 ))}
                             </Form.Select>
                             <Form.Control type="text" placeholder="Search by course number"
-                                          onChange={(e) => setSelectedCourseNumber(e.target.value)}/>
+                                onChange={(e) => setSelectedCourseNumber(e.target.value)} />
                         </InputGroup>
                         <InputGroup className="mb-3">
                             <Form.Select aria-label="Instructor filter" onChange={(e) => setSelectedInstructor(e.target.value)}>
@@ -164,13 +169,21 @@ const AdminPage = () => {
                             </Form.Select>
                         </InputGroup>
                         <Button onClick={filterCourses} variant="primary">Filter</Button>
-                        <CSModalCourseList courses={filteredCourses.sort()} checkCourse={handleCourseSelect} isSmallView={false}/>
-                        <Button onClick={() => openCourseDialog('add')} variant="light" style={{marginLeft: '1rem'}}>Add
+                        <div style={{ width: '100%', height: '1px', backgroundColor: '#dee2e6', margin: '0.5rem 0' }} />
+
+                        <CSModalCourseList
+                            courses={filteredCourses}
+                            checkCourse={handleCourseSelect}
+                            isSmallView={false}
+                            isGeneralView={false}
+                            isAdminView={true}
+                            adminFunction={openCourseDialog} />
+                        <Button onClick={() => openCourseDialog('add')} variant="light" style={{ marginLeft: '1rem' }}>Add
                             Course</Button>
-                        <Button onClick={() => openCourseDialog('edit', currentCourse)} variant="light"
-                                style={{marginLeft: '1rem'}}>Edit Course</Button>
+                        {/* <Button onClick={() => openCourseDialog('edit', currentCourse)} variant="light"
+                            style={{ marginLeft: '1rem' }}>Edit Course</Button>
                         <Button onClick={() => openCourseDialog('delete', currentCourse)} variant="light"
-                                style={{marginLeft: '1rem'}}>Delete Course</Button>
+                            style={{ marginLeft: '1rem' }}>Delete Course</Button> */}
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => handleCourseModal(false)}>Cancel</Button>
@@ -185,41 +198,41 @@ const AdminPage = () => {
                             <Form.Group className="mb-3">
                                 <Form.Label>Subject</Form.Label>
                                 <Form.Control type="text" placeholder="Enter subject" name="subject"
-                                              value={currentCourse.subject} onChange={e => setCurrentCourse({
-                                    ...currentCourse,
-                                    subject: e.target.value
-                                })}/>
+                                    value={currentCourse.subject} onChange={e => setCurrentCourse({
+                                        ...currentCourse,
+                                        subject: e.target.value
+                                    })} />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Instructor</Form.Label>
                                 <Form.Control type="text" placeholder="Enter instructor" name="instructor"
-                                              value={currentCourse.instructor} onChange={e => setCurrentCourse({
-                                    ...currentCourse,
-                                    instructor: e.target.value
-                                })}/>
+                                    value={currentCourse.instructor} onChange={e => setCurrentCourse({
+                                        ...currentCourse,
+                                        instructor: e.target.value
+                                    })} />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Course Number</Form.Label>
                                 <Form.Control type="text" placeholder="Enter course number" name="courseNumber"
-                                              value={currentCourse.courseNumber} onChange={e => setCurrentCourse({
-                                    ...currentCourse,
-                                    courseNumber: e.target.value
-                                })}/>
+                                    value={currentCourse.courseNumber} onChange={e => setCurrentCourse({
+                                        ...currentCourse,
+                                        courseNumber: e.target.value
+                                    })} />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Location</Form.Label>
                                 <Form.Control type="text" placeholder="Enter location" name="location"
-                                              value={currentCourse.location} onChange={e => setCurrentCourse({
-                                    ...currentCourse,
-                                    location: e.target.value
-                                })}/>
+                                    value={currentCourse.location} onChange={e => setCurrentCourse({
+                                        ...currentCourse,
+                                        location: e.target.value
+                                    })} />
                             </Form.Group>
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => setShowCourseDialog(false)}>Cancel</Button>
                         <Button variant="primary"
-                                onClick={handleCourseSave}>{courseDialogMode === 'delete' ? 'Delete' : 'Save'}</Button>
+                            onClick={handleCourseSave}>{courseDialogMode === 'delete' ? 'Delete' : 'Save'}</Button>
                     </Modal.Footer>
                 </Modal>
             </div>

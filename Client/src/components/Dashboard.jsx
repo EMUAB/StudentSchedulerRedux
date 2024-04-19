@@ -5,13 +5,14 @@ import "./Dashboard.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DashNavbar from "./Navbar";
 import { Button, Card, Form, Modal, InputGroup, Accordion } from "react-bootstrap";
-import { possibleTerms } from "./sample-data";
+import { possibleTerms } from "../sample-data";
 import { logout } from '../AuthService';
 import Calendar from './Calendar';
 import ScheduleList from './ScheduleList';
 import { CSModalCourseList, RecCourseList, SelectedCourseList } from './CoursesList';
 import { getToken } from '../AuthService';
-import { sampleLogins } from './sample-data';
+import { sampleLogins } from '../sample-data';
+import ProfileModal from './ProfileModal';
 
 /**
  * Dashboard component.
@@ -58,6 +59,7 @@ function Dashboard() {
     logout();
     window.location.reload();
   }
+  const [isProfileModalOpen, setProfileModalOpen] = useState(false);
 
   const userInfo = (sampleLogins.users.find(user => user.id === getToken()) || {});
   const advisorName = (sampleLogins.users.find(user => user.id === userInfo.advisor) || 'No advisor').name;
@@ -74,13 +76,13 @@ function Dashboard() {
       const data = await response.json();
       setCourses(data.map(course => ({ ...course, checked: false })));
       setGeneralCourses(generalizeCourses(courses));
-      console.log(data);
+      // console.log(data);
 
       const response2 = await fetch('/api/sampleSchedule');
       const data2 = await response2.json();
       setSampleSchedules(data2);
-      getRecommendedCourses();
-      console.log(data2);
+      await getRecommendedCourses();
+      // console.log(data2);
     };
 
     fetchCourses();
@@ -134,7 +136,7 @@ function Dashboard() {
     }
   }
 
-  const handleCSSearch = () => { // TODO Ideally have this rely on different SQL queries, but update this as necessary
+  const handleCSSearch = () => {
     setFilteredCSCourses(generalizeCourses(courses.filter(course => (
       (course.subject === selectedCSSubject) || (selectedCSSubject === ""))
       && ((course.instructor === selectedCSInstructor) || (selectedCSInstructor === ""))
@@ -169,6 +171,9 @@ function Dashboard() {
   };
 
   const checkCourse = (course, isChecked) => {
+    if (course.title === undefined) {
+      return;
+    }
     if (isChecked && !checkedCSCourses.includes(course)) {
       setCheckedCSCourses([...checkedCSCourses, course]);
     } else if (!isChecked && checkedCSCourses.includes(course)) {
@@ -224,9 +229,9 @@ function Dashboard() {
     setPossibleSchedules(combinations);
   }
 
-  const getRecommendedCourses = () => {
+  const getRecommendedCourses = async () => {
     setStudentRecommendations(typeof sampleSchedules[0] === 'undefined' ? new Array(1)
-    : (userInfo.year == 1
+      : (userInfo.year == 1
         ? (selectedTerm.name === 'Spring 2024'
           ? sampleSchedules[0].academicYears.Freshman.springCourses
           : sampleSchedules[0].academicYears.Freshman.fallCourses)
@@ -237,7 +242,8 @@ function Dashboard() {
 
   return (
     <div className="Dashboard">
-      <DashNavbar logout={handleLogout} userName={userInfo.name} />
+      <DashNavbar logout={handleLogout} userName={userInfo.name} handleProfileModal={setProfileModalOpen} />
+      <ProfileModal userInfo={userInfo} isOpen={isProfileModalOpen} handleProfileModal={setProfileModalOpen} />
       <div className="card-divs">
         <div className="top-link-card-container" style={{ display: 'flex', marginTop: '1rem', marginBottom: '1rem', textAlign: 'left' }}>
           <Card style={{ width: '18rem', marginRight: '1rem', marginLeft: '1rem', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: "#1b604a", color: "#fff" }}>
