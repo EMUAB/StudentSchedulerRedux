@@ -3,16 +3,25 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { isAuthenticated, login, getToken } from './AuthService';
+import { sampleLogins } from './components/sample-data';
 
 const App = () => {
   const [token, setToken] = useState('');
 
   const handleLogin = (blazerID, password) => {
-    const token = blazerID.concat(password);
-    // console.log(token);
-    login(token);
-    setToken(token);
-    navigateTo('/student');
+    const loginData = sampleLogins.logins.find(login => login.blazerID === blazerID && login.password === password);
+    if (loginData) {
+      const token = loginData.id;
+      login(token);
+      setToken(token);
+      if (loginData.role === 'student') {
+        navigateTo('/student');
+      } else {
+        navigateTo('/student'); //TODO change to /instructor
+      }
+      return true;
+    }
+    return false;
   }
 
   const navigateTo = useNavigate();
@@ -22,7 +31,14 @@ const App = () => {
     if (!isAuthenticated()) {
       navigateTo('/login');
     } else {
-      navigateTo('/student');
+      let loginData = sampleLogins.users.find(user => user.id === getToken());
+      if (loginData.role == 'student') {
+        navigateTo('/student');
+      } else if (loginData.role == 'instructor') {
+        navigateTo('/student'); //TODO change to /instructor
+      } else {
+        navigateTo('/login');
+      }
     }
   }, [navigateTo]);
 
