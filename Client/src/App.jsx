@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { isAuthenticated, login, getToken } from './AuthService';
+import AdminPage from './components/AdminPage.jsx';
 import { sampleLogins } from './components/sample-data';
 
 const App = () => {
   const [token, setToken] = useState('');
+  const location = useLocation();
 
   const handleLogin = (blazerID, password) => {
     const loginData = sampleLogins.logins.find(login => login.blazerID === blazerID && login.password === password);
@@ -46,13 +48,14 @@ const App = () => {
     } else {
       sendUser();
     }
-  }, [navigateTo]);
+  }, [navigateTo, isAuthenticated, location]);
 
   return (
     <div>
       <Routes>
         <Route path="/student" element={<Dashboard />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </div>
   );

@@ -8,9 +8,9 @@ export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallVie
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = (isSmallView ? 20 : 10);
 
-    const handleCheck = (course, checkStatus) => {
+    const handleCheck = (course) => {
         course.checked = !course.checked;
-        checkCourse(course, course.checked);
+        checkCourse(course);
     };
 
     const renderCourses = () => {
@@ -176,8 +176,8 @@ export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourseS
                 }}>
                     <Form.Check type={"checkbox"} >
                         <Form.Check.Input aria-label={`mark-course-${course.subject}-${course.courseNumber}-${course.section}`}
-                            defaultChecked={false} type={"checkbox"}
-                            onChange={(e) => markCourseForRemoval(course.id, e.target.checked)} />
+                                          defaultChecked={false} type={"checkbox"}
+                                          onChange={(e) => markCourseForRemoval(course.id, e.target.checked)} />
                     </Form.Check>
                     <div style={{ padding: '0px 1rem 0 0.5rem', display: 'flex', width: '100%', flexDirection: 'column' }}>
                         <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.subject} {course.courseNumber}</p>
