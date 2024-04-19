@@ -24,49 +24,46 @@ const AdminPage = () => {
     const [selectedLocation, setSelectedLocation] = useState("");
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            const response = await fetch('/api/courses');
-            let data = await response.json();
-            data = data.sort((a, b) => {
-                const titleA = `${a.subject}${a.courseNumber}`;
-                const titleB = `${b.subject}${b.courseNumber}`;
-                return titleA.localeCompare(titleB);
-            });
-
-            setCourses(data);
-            setFilteredCourses(data);
-        };
         fetchCourses();
     }, []);
 
+    const fetchCourses = async () => {
+        try {
+            const response = await fetch('/api/courses');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setCourses(data);
+            setFilteredCourses(data);
+        } catch (error) {
+            console.error("There has been a problem with your fetch operation:", error);
+        }
+    };
 
-
-    const openCourseDialog = (mode, course = {
-        id: '',
-        subject: '',
-        instructor: '',
-        courseNumber: '',
-        location: ''
-    }) => {
+    const openCourseDialog = (mode, course) => {
         setCourseDialogMode(mode);
-        setCurrentCourse(course);
+        setCurrentCourse(course || {
+            id: '',
+            subject: '',
+            instructor: '',
+            courseNumber: '',
+            location: ''
+        });
         setShowCourseDialog(true);
     };
 
     const handleCourseSave = async () => {
-        const apiUrl = `/api/courses/${courseDialogMode === 'add' ? '' : currentCourse.id}`;
-        const method = courseDialogMode === 'add' ? 'POST' : 'edit' ? 'PUT' : 'DELETE';
+        const apiUrl = `/api/courses/${currentCourse.id}`;
+        const method = courseDialogMode === 'add' ? 'POST' : courseDialogMode === 'edit' ? 'PUT' : 'DELETE';
         const headers = { 'Content-Type': 'application/json' };
         const body = JSON.stringify(currentCourse);
 
         try {
-            const response = await fetch(apiUrl, { method, headers, body: courseDialogMode !== 'delete' ? body : undefined });
+            const response = await fetch(apiUrl, { method, headers, body: courseDialogMode !== 'delete' ? body : null });
             if (response.ok) {
-                const updatedCourses = await response.json();
-                setCourses(updatedCourses);
-                setFilteredCourses(updatedCourses);
+                await fetchCourses(); // Refresh the courses list
                 setShowCourseDialog(false);
-                setCourseSelectionModalOpen(false);
             } else {
                 throw new Error('Failed to perform the operation');
             }
@@ -100,6 +97,9 @@ const AdminPage = () => {
         setFilteredCourses(result);
     };
 
+const handleCourseSelect = (course) => {
+    setCurrentCourse(course);
+};
 
     return (
         <div className="AdminPage">
@@ -154,7 +154,7 @@ const AdminPage = () => {
                             </Form.Select>
                         </InputGroup>
                         <Button onClick={filterCourses} variant="primary">Filter</Button>
-                        <CSModalCourseList courses={filteredCourses.sort()} isSmallView={false}/>
+                        <CSModalCourseList courses={filteredCourses.sort()} checkCourse={handleCourseSelect} isSmallView={false}/>
                         <Button onClick={() => openCourseDialog('add')} variant="light" style={{marginLeft: '1rem'}}>Add
                             Course</Button>
                         <Button onClick={() => openCourseDialog('edit', currentCourse)} variant="light"
