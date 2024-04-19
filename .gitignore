@@ -32,7 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
-/Client/node_modules
+### Other ###
+Server/application.log
 WebScraper/
 WebScraper/*
 serverstarters/
