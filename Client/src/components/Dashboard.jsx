@@ -9,7 +9,7 @@ import { possibleTerms } from "./sample-data";
 import { logout } from '../AuthService';
 import Calendar from './Calendar';
 import ScheduleList from './ScheduleList';
-import { CSModalCourseList, SelectedCourseList } from './CoursesList';
+import { CSModalCourseList, RecCourseList, SelectedCourseList } from './CoursesList';
 import { getToken } from '../AuthService';
 import { sampleLogins } from './sample-data';
 
@@ -60,10 +60,13 @@ function Dashboard() {
   }
 
   const userInfo = (sampleLogins.users.find(user => user.id === getToken()) || {});
-  const advisorName = (sampleLogins.users.find(user => user.id === userInfo.advisor) || {}).name;
+  const advisorName = (sampleLogins.users.find(user => user.id === userInfo.advisor) || 'No advisor').name;
 
   const [courses, setCourses] = useState([]);
   const [generalCourses, setGeneralCourses] = useState([]);
+
+  const [sampleSchedules, setSampleSchedules] = useState([]);
+  const [studentRecommendations, setStudentRecommendations] = useState([]);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -72,6 +75,12 @@ function Dashboard() {
       setCourses(data.map(course => ({ ...course, checked: false })));
       setGeneralCourses(generalizeCourses(courses));
       console.log(data);
+
+      const response2 = await fetch('/api/sampleSchedule');
+      const data2 = await response2.json();
+      setSampleSchedules(data2);
+      getRecommendedCourses();
+      console.log(data2);
     };
 
     fetchCourses();
@@ -95,14 +104,12 @@ function Dashboard() {
   const [selectedCSLocation, setSelectedCSLocation] = useState("");
   const [filteredCSCourses, setFilteredCSCourses] = useState([]);
   const [checkedCSCourses, setCheckedCSCourses] = useState([]);
-  const [isCSsearched, setIsCSsearched] = useState(false);
-
   const [selectedCourses, setSelectedCourses] = useState([]); // TODO Save selected courses to local cache so they persist over user sessions
 
   const calculateHours = () => {
     let hours = 0;
     selectedCourses.forEach(course => {
-      hours += Number(course.credit);
+      hours += (course.credit.includes('-') ? parseInt(course.credit.split('-')[1]) : parseInt(course.credit));
     });
     return hours;
   };
@@ -176,7 +183,6 @@ function Dashboard() {
         selectedCourses.push(course)
       }
     });
-    console.log(selectedCourses);
     resetCheckedCourses();
     handleCSModal(false);
   };
@@ -191,7 +197,6 @@ function Dashboard() {
     setSelectedSchedule(schedule);
     setPreviewScheduleModalOpen(false);
   }
-
 
   const [currentSchedule, setCurrentSchedule] = useState([]);
   const [possibleSchedules, setPossibleSchedules] = useState([]);
@@ -219,6 +224,16 @@ function Dashboard() {
     setPossibleSchedules(combinations);
   }
 
+  const getRecommendedCourses = () => {
+    setStudentRecommendations(typeof sampleSchedules[0] === 'undefined' ? new Array(1)
+    : (userInfo.year == 1
+        ? (selectedTerm.name === 'Spring 2024'
+          ? sampleSchedules[0].academicYears.Freshman.springCourses
+          : sampleSchedules[0].academicYears.Freshman.fallCourses)
+        : (selectedTerm.name === 'Spring 2024'
+          ? sampleSchedules[0].academicYears.Sophomore.springCourses
+          : sampleSchedules[0].academicYears.Sophomore.fallCourses)));
+  }
 
   return (
     <div className="Dashboard">
@@ -240,7 +255,7 @@ function Dashboard() {
                     <Modal.Body>
                       <Form.Select aria-label="Term selection form" onChange={(e) => setTempTermID(e.target.value)}>
                         {terms.map((term, index) => (
-                          <option key={index} value={term.id} selected={term.id === selectedTerm.id}>{term.name}</option>
+                          <option key={index} value={term.id} defaultValue={selectedTerm.id}>{term.name}</option>
                         ))}
                       </Form.Select>
                     </Modal.Body>
@@ -273,7 +288,7 @@ function Dashboard() {
               </div>
             </Card.Title>
             <Card.Body style={{ paddingTop: '0.4rem' }}>
-              <SelectedCourseList selectedCourses={selectedCourses} removeCourses={removeSelectedCourses} viewCourse={handleCSSectionModal} />
+              <SelectedCourseList selectedCourses={selectedCourses} removeCourses={removeSelectedCourses} viewCourseSections={handleCSSectionModal} viewCourseAbout={handleCSAboutModal} />
               <Button variant="light" size="sm" style={{ width: '100%' }} onClick={() => handleCSModal(true)}><Add />Add course</Button>
               <Modal size="xl" show={isCourseSelectionModalOpen} onHide={() => handleCSModal(false)} backdrop="static" centered>
                 <Modal.Dialog style={{
@@ -349,10 +364,10 @@ function Dashboard() {
                   <Modal.Body>
                     <CSModalCourseList courses={courses.filter(course => course.subject === selectedCSGeneralCourse.subject && course.courseNumber === selectedCSGeneralCourse.courseNumber)} checkCourse={checkCourse} viewCourse={handleCSAboutModal} isSmallView={true} isGeneralView={false} />
                   </Modal.Body>
-                  {/* <Modal.Footer>
+                  <Modal.Footer>
                     <Button variant="secondary" onClick={() => handleCSSectionModal(false)}>Close</Button>
                     <Button variant="primary" onClick={checkCourse(selectedCSGeneralCourse, true)}>Check Course</Button>
-                  </Modal.Footer> */}
+                  </Modal.Footer>
                 </Modal.Dialog>
               </Modal>
 
@@ -381,8 +396,9 @@ function Dashboard() {
             <Card.Body>
               <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>Recommended Courses</Card.Title>
               <Card.Text>
-                <Button variant="light" size="sm" href="#">View recommendations</Button>
+                <Button variant="light" size="sm" onClick={getRecommendedCourses}>View recommendations</Button>
               </Card.Text>
+              <RecCourseList recCourses={studentRecommendations} viewCourseSections={handleCSSectionModal} />
             </Card.Body>
           </Card>
         </div>

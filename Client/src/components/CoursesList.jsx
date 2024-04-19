@@ -130,9 +130,8 @@ export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallVie
     );
 }
 
-export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourse }) => {
+export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourseSections }) => {
     const [markedCourses, setMarkedCourses] = useState([]);
-
 
     const markCourseForRemoval = (course, checked) => {
         if (checked) {
@@ -149,7 +148,6 @@ export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourse 
             setMarkedCourses(prevCourses => prevCourses.filter(c => c !== course));
         }
     };
-
 
     const courseElements = [];
     selectedCourses.forEach(course => {
@@ -190,13 +188,9 @@ export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourse 
                         <p style={{ margin: '1rem 0 0 0', fontSize: '20px' }}>{course.credit}</p>
                         <p style={{ margin: '-0.4rem 0 1rem 0', fontSize: '12px' }}>Hours</p>
                     </div>
-                    <div onClick={() => viewCourse(true, course)} style={{ cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '0.8rem' }}>
+                    <div onClick={() => viewCourseSections(true, course)} style={{ cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '0.8rem' }}>
                         <CalendarMonth />
                         Times
-                    </div>
-                    <div onClick={() => viewCourse(true, course)} style={{ cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '0.2rem' }}>
-                        <Info />
-                        About
                     </div>
                 </div>
             </div>
@@ -209,4 +203,55 @@ export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourse 
         </div>
     );
 
+};
+
+export const RecCourseList = ({ recCourses, selectCourse, viewCourseSections }) => {
+    if (recCourses.length < 1) {
+        return <div style={{ padding: '1rem' }}>Refresh to load</div>;
+    }
+    const courseElements = [];
+    recCourses.forEach(course => {
+        courseElements.push(
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: '#ffe',
+                    color: '#000',
+                    borderRadius: '8px',
+                    padding: '4px',
+                    marginBottom: '2px',
+                    width: '100%',
+                }}
+                key={course.name}>
+                <div style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    padding: '0 4px 0 2px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '3rem',
+                }}>
+                    <div style={{ padding: '0px 1rem 0 0.5rem', display: 'flex', width: '100%', flexDirection: 'column' }}>
+                        <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.name} </p>
+                    </div>
+
+                    <div style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '0.8rem' }}>
+                        <p style={{ margin: '1rem 0 0 0', fontSize: '20px' }}>{course.hours}</p>
+                        <p style={{ margin: '-0.4rem 0 1rem 0', fontSize: '12px' }}>Hours</p>
+                    </div>
+                    {/* <div onClick={() => viewCourseSections(true, course)} style={{ cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '0.8rem' }}>
+                        <CalendarMonth />
+                        Times
+                    </div> */}
+                </div>
+            </div>
+        );
+    });
+    return (
+        <div style={{ borderRadius: '2px', display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+            {courseElements}
+        </div>
+    );
 };

@@ -17,7 +17,7 @@ const App = () => {
       if (loginData.role === 'student') {
         navigateTo('/student');
       } else {
-        navigateTo('/instructor');
+        navigateTo('/student'); //TODO change to /instructor
       }
       return true;
     }
@@ -35,7 +35,7 @@ const App = () => {
       if (loginData.role == 'student') {
         navigateTo('/student');
       } else if (loginData.role == 'instructor') {
-        navigateTo('/instructor');
+        navigateTo('/student'); //TODO change to /instructor
       } else {
         navigateTo('/login');
       }
