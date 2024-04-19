@@ -15,7 +15,7 @@ const App = () => {
       if (loginData.role === 'student') {
         navigateTo('/student');
       } else {
-        navigateTo('/student'); //TODO change to /instructor
+        navigateTo('/admin'); //TODO change to /instructor
       }
       return true;
     }
@@ -30,10 +30,12 @@ const App = () => {
       navigateTo('/login');
     } else {
       let loginData = sampleLogins.users.find(user => user.id === getToken());
-      if (loginData.role == 'student') {
+      if (loginData === undefined) {
+        navigateTo('/login');
+      } else if (loginData.role == 'student') {
         navigateTo('/student');
       } else if (loginData.role == 'instructor') {
-        navigateTo('/student'); //TODO change to /instructor
+        navigateTo('/admin'); //TODO change to /instructor
       } else {
         navigateTo('/login');
       }
