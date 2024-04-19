@@ -278,7 +278,7 @@ function Dashboard() {
             <Card.Body>
               <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>{advisorName}</Card.Title>
               <Card.Text>
-                <Button variant="light" size="sm" href="#">Contact advisor</Button>
+                <Button variant="light" size="sm" href="mailto:advisor@uab.edu?subject=Advising%20help">Contact advisor</Button>
               </Card.Text>
             </Card.Body>
           </Card>
