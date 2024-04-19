@@ -15,7 +15,7 @@ export const sampleLogins = {
     ],
     users: [
         { id: '1year', role: 'student', name: 'First Year Student', advisor: 'admin', year: 1 },
-        { id: '2year', role: 'student', name: 'Second Year Student', advisor: 'admin', year: 1 },
+        { id: '2year', role: 'student', name: 'Second Year Student', advisor: 'admin', year: 2 },
         { id: 'test', role: 'student', name: 'Test Student', advisor: 'admin', year: 1 },
         { id: 'admin', role: 'instructor', name: 'Dr. Admin', advisor: '', year: 0 },
     ],
