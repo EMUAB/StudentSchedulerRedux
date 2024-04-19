@@ -17,6 +17,7 @@ const AdminPage = () => {
         courseNumber: '',
         location: ''
     });
+
     const [selectedSubject, setSelectedSubject] = useState("");
     const [selectedInstructor, setSelectedInstructor] = useState("");
     const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
@@ -31,6 +32,7 @@ const AdminPage = () => {
         };
         fetchCourses();
     }, []);
+
 
     const openCourseDialog = (mode, course = {
         id: '',
@@ -73,15 +75,18 @@ const AdminPage = () => {
         }
     };
 
-  const filterCourses = () => {
-    const result = courses.filter(course =>
-        (course.subject === selectedSubject || selectedSubject === "") &&
-        (course.instructor === selectedInstructor || selectedInstructor === "") &&
-        (course.courseNumber.toString() === selectedCourseNumber || selectedCourseNumber === "") &&
-        (course.location === selectedLocation || selectedLocation === "")
-    );
-    setFilteredCourses(result);
-  };
+    const filterCourses = () => {
+        console.log("Filtering with:", { selectedSubject, selectedInstructor, selectedCourseNumber, selectedLocation });
+        const result = courses.filter(course =>
+            (course.subject === selectedSubject || selectedSubject === "") &&
+            (course.instructor === selectedInstructor || selectedInstructor === "") &&
+            (course.courseNumber.toString() === selectedCourseNumber.toString() || selectedCourseNumber === "") &&
+            (course.location === selectedLocation || selectedLocation === "")
+        );
+        console.log("Filtered Results:", result);
+        setFilteredCourses(result);
+    };
+
 
     return (
         <div className="AdminPage">
@@ -112,34 +117,32 @@ const AdminPage = () => {
                     </Modal.Header>
                     <Modal.Body>
                         <InputGroup className="mb-3">
-                            <Form.Select aria-label="Subject filter"
-                                         onChange={(e) => setSelectedSubject(e.target.value)}>
+                            <Form.Select aria-label="Subject filter" onChange={(e) => setSelectedSubject(e.target.value)}>
                                 <option value="">Select Subject</option>
-                                {courses.map((course, index) => (
-                                    <option key={index} value={course.subject}>{course.subject}</option>
+                                {Array.from(new Set(courses.map(course => course.subject))).sort().map((subject, index) => (
+                                    <option key={index} value={subject}>{subject}</option>
                                 ))}
                             </Form.Select>
                             <Form.Control type="text" placeholder="Search by course number"
                                           onChange={(e) => setSelectedCourseNumber(e.target.value)}/>
                         </InputGroup>
                         <InputGroup className="mb-3">
-                            <Form.Select aria-label="Instructor filter"
-                                         onChange={(e) => setSelectedInstructor(e.target.value)}>
+                            <Form.Select aria-label="Instructor filter" onChange={(e) => setSelectedInstructor(e.target.value)}>
                                 <option value="">Select Instructor</option>
-                                {courses.map((course, index) => (
-                                    <option key={index} value={course.instructor}>{course.instructor}</option>
+                                {Array.from(new Set(courses.map(course => course.instructor))).sort().map((instructor, index) => (
+                                    <option key={index} value={instructor}>{instructor}</option>
                                 ))}
                             </Form.Select>
-                            <Form.Select aria-label="Location filter"
-                                         onChange={(e) => setSelectedLocation(e.target.value)}>
+
+                            <Form.Select aria-label="Location filter" onChange={(e) => setSelectedLocation(e.target.value)}>
                                 <option value="">Select Location</option>
-                                {courses.map((course, index) => (
-                                    <option key={index} value={course.location}>{course.location}</option>
+                                {Array.from(new Set(courses.map(course => course.location))).sort().map((location, index) => (
+                                    <option key={index} value={location}>{location}</option>
                                 ))}
                             </Form.Select>
                         </InputGroup>
                         <Button onClick={filterCourses} variant="primary">Search</Button>
-                        <CSModalCourseList courses={filteredCourses} isSmallView={false}/>
+                        <CSModalCourseList courses={filteredCourses.sort()} isSmallView={false}/>
                         <Button onClick={() => openCourseDialog('add')} variant="light" style={{marginLeft: '1rem'}}>Add
                             Course</Button>
                         <Button onClick={() => openCourseDialog('edit', currentCourse)} variant="light"
