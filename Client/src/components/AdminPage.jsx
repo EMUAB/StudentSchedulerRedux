@@ -4,6 +4,8 @@ import DashNavbar from './Navbar';
 import { CSModalCourseList, SelectedCourseList } from './CoursesList';
 import { logout } from '../AuthService';
 
+// Bruh moment
+
 const AdminPage = () => {
     const [courses, setCourses] = useState([]);
     const [filteredCourses, setFilteredCourses] = useState([]);
