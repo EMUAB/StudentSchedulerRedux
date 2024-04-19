@@ -54,20 +54,28 @@ const AdminPage = () => {
     };
 
     const handleCourseSave = async () => {
-        const apiUrl = `/api/courses/${currentCourse.id}`;
-        const method = courseDialogMode === 'add' ? 'POST' : courseDialogMode === 'edit' ? 'PUT' : 'DELETE';
+        let apiUrl = '/api/courses/'; 
+        let method = 'POST';
+        let body = JSON.stringify(currentCourse);
         const headers = { 'Content-Type': 'application/json' };
-        const body = JSON.stringify(currentCourse);
+        
+        if (courseDialogMode !== 'add') {
+            apiUrl += `/${currentCourse.id}`;
+            method = courseDialogMode === 'edit' ? 'PUT' : 'DELETE';
+            body = method !== 'DELETE' ? JSON.stringify(currentCourse) : undefined;
+        }
 
         try {
-            const response = await fetch(apiUrl, { method, headers, body: courseDialogMode !== 'delete' ? body : null });
+            const response = await fetch(apiUrl, { method, headers, body: body });
             if (response.ok) {
-                await fetchCourses(); // Refresh the courses list
+                await fetchCourses();
                 setShowCourseDialog(false);
             } else {
-                throw new Error('Failed to perform the operation');
+                const errorBody = await response.json(); 
+                throw new Error(errorBody.message || 'Failed to perform the operation');
             }
         } catch (error) {
+            console.error(error);
             alert(error.message);
         }
     };
@@ -97,9 +105,9 @@ const AdminPage = () => {
         setFilteredCourses(result);
     };
 
-const handleCourseSelect = (course) => {
-    setCurrentCourse(course);
-};
+    const handleCourseSelect = (course) => {
+        setCurrentCourse(course);
+    };
 
     return (
         <div className="AdminPage">
