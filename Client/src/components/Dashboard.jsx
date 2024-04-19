@@ -5,13 +5,13 @@ import "./Dashboard.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DashNavbar from "./Navbar";
 import { Button, Card, Form, Modal, InputGroup, Accordion } from "react-bootstrap";
-import { possibleTerms } from "./sample-data";
+import { possibleTerms } from "../sample-data";
 import { logout } from '../AuthService';
 import Calendar from './Calendar';
 import ScheduleList from './ScheduleList';
 import { CSModalCourseList, RecCourseList, SelectedCourseList } from './CoursesList';
 import { getToken } from '../AuthService';
-import { sampleLogins } from './sample-data';
+import { sampleLogins } from '../sample-data';
 import ProfileModal from './ProfileModal';
 
 /**
@@ -136,7 +136,7 @@ function Dashboard() {
     }
   }
 
-  const handleCSSearch = () => { // TODO Ideally have this rely on different SQL queries, but update this as necessary
+  const handleCSSearch = () => {
     setFilteredCSCourses(generalizeCourses(courses.filter(course => (
       (course.subject === selectedCSSubject) || (selectedCSSubject === ""))
       && ((course.instructor === selectedCSInstructor) || (selectedCSInstructor === ""))

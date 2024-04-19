@@ -3,17 +3,15 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { isAuthenticated, login, getToken } from './AuthService';
-import { sampleLogins } from './components/sample-data';
+import { sampleLogins } from './sample-data';
 
 const App = () => {
-  const [token, setToken] = useState('');
 
   const handleLogin = (blazerID, password) => {
     const loginData = sampleLogins.logins.find(login => login.blazerID === blazerID && login.password === password);
     if (loginData) {
       const token = loginData.id;
       login(token);
-      setToken(token);
       if (loginData.role === 'student') {
         navigateTo('/student');
       } else {
