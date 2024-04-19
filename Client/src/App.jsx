@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { isAuthenticated, login, getToken } from './AuthService';
 import { sampleLogins } from './sample-data';
+import AdminPage from './components/AdminPage.jsx';
 
 const App = () => {
+  const [token, setToken] = useState('');
+  const location = useLocation();
 
   const handleLogin = (blazerID, password) => {
     const loginData = sampleLogins.logins.find(login => login.blazerID === blazerID && login.password === password);
@@ -26,9 +29,7 @@ const App = () => {
 
   // Check isLoggedIn state, if false, redirect to /login
   useEffect(() => {
-    if (!isAuthenticated()) {
-      navigateTo('/login');
-    } else {
+    const sendUser = () => {
       let loginData = sampleLogins.users.find(user => user.id === getToken());
       if (loginData === undefined) {
         navigateTo('/login');
@@ -40,6 +41,12 @@ const App = () => {
         navigateTo('/login');
       }
     }
+
+    if (!isAuthenticated()) {
+      navigateTo('/login');
+    } else {
+      sendUser();
+    }
   }, [navigateTo]);
 
   return (
@@ -47,6 +54,7 @@ const App = () => {
       <Routes>
         <Route path="/student" element={<Dashboard />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </div>
   );
