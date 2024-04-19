@@ -28,17 +28,23 @@ const App = () => {
 
   // Check isLoggedIn state, if false, redirect to /login
   useEffect(() => {
-    if (!isAuthenticated()) {
-      navigateTo('/login');
-    } else {
-      let loginData = sampleLogins.users.find(user => user.id === getToken());
-      if (loginData.role == 'student') {
+    const sendUser = async () => {
+      let loginData = await sampleLogins.users.find(user => user.id === getToken());
+      if (loginData === undefined) {
+        navigateTo('/login');
+      } else if (loginData.role == 'student') {
         navigateTo('/student');
       } else if (loginData.role == 'instructor') {
         navigateTo('/student'); //TODO change to /instructor
       } else {
         navigateTo('/login');
       }
+    }
+
+    if (!isAuthenticated()) {
+      navigateTo('/login');
+    } else {
+      sendUser();
     }
   }, [navigateTo]);
 
