@@ -2,8 +2,8 @@
   background-color: #f0f0f0;
   text-align: start;
   height: 100vh;
+  overflow: auto;
 }
-
 
 .banner {
   background-color: white;

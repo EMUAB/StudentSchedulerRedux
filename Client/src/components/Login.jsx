@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import logo from '/uab-color-logo.png';
 import Button from "react-bootstrap/Button";
 import './Login.css';
+
 export const Login = ({ onLogin }) => {
   const [blazerID, setBlazerID] = useState('');
   const [password, setPassword] = useState('');
