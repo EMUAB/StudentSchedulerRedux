@@ -3,14 +3,14 @@ import { Pagination, Form, Button } from 'react-bootstrap';
 import { Info, CalendarMonth } from '@mui/icons-material';
 
 
-export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallView, isGeneralView }) => {
+export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallView, isGeneralView, isAdminView, adminFunction }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = (isSmallView ? 20 : 10);
 
-    const handleCheck = (course) => {
+    const handleCheck = (course, checkStatus) => {
         course.checked = !course.checked;
-        checkCourse(course);
+        checkCourse(course, course.checked);
     };
 
     const renderCourses = () => {
@@ -48,8 +48,11 @@ export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallVie
                     }}>
                         {isGeneralView ?
                             <Form.Check type={"checkbox"} >
-                                <Form.Check.Input aria-label={`check-course-${course.title}`}
-                                    checked={course.checked} onChange={(e) => handleCheck(course, e.target.checked)} />
+                                <Form.Check.Input
+                                    aria-label={`check-course-${course.subject}-${course.courseNumber}-${course.section}`}
+                                    checked={course.checked}
+                                    onChange={() => handleCheck(course)}
+                                />
                             </Form.Check>
                             : null}
 
@@ -68,10 +71,15 @@ export const CSModalCourseList = ({ courses, checkCourse, viewCourse, isSmallVie
                                     <p style={{ marginBottom: '0px', fontSize: '14px' }}> Hours</p>
                                 </div>
                             </>}
-                        <div onClick={() => viewCourse(true, course)} style={{ cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '4px' }}>
-                            {isGeneralView ? <><CalendarMonth />Times</> : <><Info /> About</>}
-
-                        </div>
+                        {isAdminView ?
+                            <div style={{display: 'flex'}}>
+                                <Button variant='dark' size='sm' style={{fontWeight: 'bold', marginRight: '0.5rem'}} onClick={() => adminFunction('edit', course)}>Edit</Button>
+                                <Button variant='danger' size='sm' style={{ fontWeight: 'bold' }} onClick={() => adminFunction('delete', course)}>Delete</Button>
+                            </div>
+                            :
+                            <div onClick={() => viewCourse(true, course)} style={{ cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 'auto', marginRight: '4px' }}>
+                                {isGeneralView ? <><CalendarMonth />Times</> : <><Info /> About</>}
+                            </div>}
                     </div>
                 </div>
             );
@@ -175,9 +183,11 @@ export const SelectedCourseList = ({ selectedCourses, removeCourses, viewCourseS
                     height: '3rem',
                 }}>
                     <Form.Check type={"checkbox"} >
-                        <Form.Check.Input aria-label={`mark-course-${course.subject}-${course.courseNumber}-${course.section}`}
-                                          defaultChecked={false} type={"checkbox"}
-                                          onChange={(e) => markCourseForRemoval(course.id, e.target.checked)} />
+                        <Form.Check.Input
+                            aria-label={`mark-course-${course.subject}-${course.courseNumber}-${course.section}`}
+                            defaultChecked={false}
+                            type={"checkbox"}
+                            onChange={(e) => markCourseForRemoval(course.id, e.target.checked)} />
                     </Form.Check>
                     <div style={{ padding: '0px 1rem 0 0.5rem', display: 'flex', width: '100%', flexDirection: 'column' }}>
                         <p style={{ marginBottom: '-4px', fontSize: '20px' }}> {course.subject} {course.courseNumber}</p>

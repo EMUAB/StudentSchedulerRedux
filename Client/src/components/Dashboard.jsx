@@ -171,6 +171,9 @@ function Dashboard() {
   };
 
   const checkCourse = (course, isChecked) => {
+    if (course.title === undefined) {
+      return;
+    }
     if (isChecked && !checkedCSCourses.includes(course)) {
       setCheckedCSCourses([...checkedCSCourses, course]);
     } else if (!isChecked && checkedCSCourses.includes(course)) {

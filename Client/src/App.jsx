@@ -31,6 +31,7 @@ const App = () => {
   useEffect(() => {
     const sendUser = () => {
       let loginData = sampleLogins.users.find(user => user.id === getToken());
+      console.log(loginData);
       if (loginData === undefined) {
         navigateTo('/login');
       } else if (loginData.role == 'student') {
