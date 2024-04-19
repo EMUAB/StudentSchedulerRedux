@@ -26,12 +26,19 @@ const AdminPage = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             const response = await fetch('/api/courses');
-            const data = await response.json();
+            let data = await response.json();
+            data = data.sort((a, b) => {
+                const titleA = `${a.subject}${a.courseNumber}`;
+                const titleB = `${b.subject}${b.courseNumber}`;
+                return titleA.localeCompare(titleB);
+            });
+
             setCourses(data);
             setFilteredCourses(data);
         };
         fetchCourses();
     }, []);
+
 
 
     const openCourseDialog = (mode, course = {
@@ -76,14 +83,20 @@ const AdminPage = () => {
     };
 
     const filterCourses = () => {
-        console.log("Filtering with:", { selectedSubject, selectedInstructor, selectedCourseNumber, selectedLocation });
-        const result = courses.filter(course =>
+        let result = courses.filter(course =>
             (course.subject === selectedSubject || selectedSubject === "") &&
             (course.instructor === selectedInstructor || selectedInstructor === "") &&
-            (course.courseNumber.toString() === selectedCourseNumber.toString() || selectedCourseNumber === "") &&
+            (course.courseNumber.toString() === selectedCourseNumber || selectedCourseNumber === "") &&
             (course.location === selectedLocation || selectedLocation === "")
         );
-        console.log("Filtered Results:", result);
+
+        // Sort the result by combining subject and courseNumber to create a title, then sort alphabetically
+        result = result.sort((a, b) => {
+            const titleA = `${a.subject}${a.courseNumber}`;
+            const titleB = `${b.subject}${b.courseNumber}`;
+            return titleA.localeCompare(titleB);
+        });
+
         setFilteredCourses(result);
     };
 
@@ -102,10 +115,9 @@ const AdminPage = () => {
                 <h2>Hello, Professor!</h2>
             </div>
             <div className="card-divs">
-                <Card>
+                <Card style={{ backgroundColor: '#0f3b2d' }}>
                     <Card.Body>
-                        <Button variant="light" size="sm" style={{width: '100%'}}
-                                onClick={() => handleCourseModal(true)}>
+                        <Button variant="light" size="sm" style={{ width: '100%' }} onClick={() => handleCourseModal(true)}>
                             Edit Courses
                         </Button>
                     </Card.Body>
@@ -141,7 +153,7 @@ const AdminPage = () => {
                                 ))}
                             </Form.Select>
                         </InputGroup>
-                        <Button onClick={filterCourses} variant="primary">Search</Button>
+                        <Button onClick={filterCourses} variant="primary">Filter</Button>
                         <CSModalCourseList courses={filteredCourses.sort()} isSmallView={false}/>
                         <Button onClick={() => openCourseDialog('add')} variant="light" style={{marginLeft: '1rem'}}>Add
                             Course</Button>
