@@ -6,13 +6,8 @@ import { logout } from '../AuthService';
 
 const AdminPage = () => {
     const [courses, setCourses] = useState([]);
-    const [selectedCourses, setSelectedCourses] = useState([]);
-    const [isCourseSelectionModalOpen, setCourseSelectionModalOpen] = useState(false);
     const [filteredCourses, setFilteredCourses] = useState([]);
-    const [selectedSubject, setSelectedSubject] = useState("");
-    const [selectedInstructor, setSelectedInstructor] = useState("");
-    const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
-    const [selectedLocation, setSelectedLocation] = useState("");
+    const [isCourseSelectionModalOpen, setCourseSelectionModalOpen] = useState(false);
     const [showCourseDialog, setShowCourseDialog] = useState(false);
     const [courseDialogMode, setCourseDialogMode] = useState('add'); // 'add', 'edit', 'delete'
     const [currentCourse, setCurrentCourse] = useState({
@@ -22,120 +17,186 @@ const AdminPage = () => {
         courseNumber: '',
         location: ''
     });
+    const [selectedSubject, setSelectedSubject] = useState("");
+    const [selectedInstructor, setSelectedInstructor] = useState("");
+    const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
+    const [selectedLocation, setSelectedLocation] = useState("");
 
     useEffect(() => {
         const fetchCourses = async () => {
             const response = await fetch('/api/courses');
             const data = await response.json();
-            setCourses(data.map(course => ({ ...course, checked: false })));
+            setCourses(data);
             setFilteredCourses(data);
         };
         fetchCourses();
     }, []);
 
-    const handleLogout = () => {
-        logout();
-        window.location.reload();
+    const openCourseDialog = (mode, course = {
+        id: '',
+        subject: '',
+        instructor: '',
+        courseNumber: '',
+        location: ''
+    }) => {
+        setCourseDialogMode(mode);
+        setCurrentCourse(course);
+        setShowCourseDialog(true);
     };
-
-    const handleCourseModal = (open) => {
-        setCourseSelectionModalOpen(open);
-    };
-
-    const filterCourses = () => {
-        const result = courses.filter(course =>
-            (course.subject === selectedSubject || selectedSubject === "") &&
-            (course.instructor === selectedInstructor || selectedInstructor === "") &&
-            (course.courseNumber.toString() === selectedCourseNumber || selectedCourseNumber === "") &&
-            (course.location === selectedLocation || selectedLocation === "")
-        );
-        setFilteredCourses(result);
-    };
-
-const openCourseDialog = (mode, course = {}) => {
-    setCourseDialogMode(mode);
-    setCurrentCourse(course);
-    setShowCourseDialog(true);
-};
 
     const handleCourseSave = async () => {
         const apiUrl = `/api/courses/${courseDialogMode === 'add' ? '' : currentCourse.id}`;
-        const method = courseDialogMode === 'add' ? 'POST' : courseDialogMode === 'edit' ? 'PUT' : 'DELETE';
+        const method = courseDialogMode === 'add' ? 'POST' : 'edit' ? 'PUT' : 'DELETE';
         const headers = { 'Content-Type': 'application/json' };
         const body = JSON.stringify(currentCourse);
 
         try {
             const response = await fetch(apiUrl, { method, headers, body: courseDialogMode !== 'delete' ? body : undefined });
-            const data = await response.json();
             if (response.ok) {
+                const updatedCourses = await response.json();
+                setCourses(updatedCourses);
+                setFilteredCourses(updatedCourses);
                 setShowCourseDialog(false);
-                // Refresh the courses list or update state accordingly
+                setCourseSelectionModalOpen(false);
             } else {
-                throw new Error(data.message || 'Error occurred');
+                throw new Error('Failed to perform the operation');
             }
         } catch (error) {
             alert(error.message);
         }
     };
 
-    const uniqueSubjects = Array.from(new Set(courses.map(course => course.subject))).sort();
-    const uniqueInstructors = Array.from(new Set(courses.map(course => course.instructor))).sort();
-    const uniqueLocations = Array.from(new Set(courses.map(course => course.location))).sort();
+    const handleCourseModal = (open) => {
+        setCourseSelectionModalOpen(open);
+        if (!open) {
+            setShowCourseDialog(false);
+        }
+    };
+
+  const filterCourses = () => {
+    const result = courses.filter(course =>
+        (course.subject === selectedSubject || selectedSubject === "") &&
+        (course.instructor === selectedInstructor || selectedInstructor === "") &&
+        (course.courseNumber.toString() === selectedCourseNumber || selectedCourseNumber === "") &&
+        (course.location === selectedLocation || selectedLocation === "")
+    );
+    setFilteredCourses(result);
+  };
 
     return (
         <div className="AdminPage">
-            <DashNavbar logout={handleLogout} />
-            <div className="hello-container" style={{ backgroundColor: '#1e6b52', color: '#fff', padding: '1rem', display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
-                <h2>Hello, Admin!</h2>
+            <DashNavbar logout={logout}/>
+            <div className="hello-container" style={{
+                backgroundColor: '#1e6b52',
+                color: '#fff',
+                padding: '1rem',
+                display: 'flex',
+                justifyContent: 'left',
+                alignItems: 'center'
+            }}>
+                <h2>Hello, Professor!</h2>
             </div>
             <div className="card-divs">
-                <Card style={{ width: '100%', margin: '1rem', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: "#1b604a", color: "#fff" }}>
+                <Card>
                     <Card.Body>
-                        <Card.Title style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>Courses</Card.Title>
-                        <SelectedCourseList selectedCourses={selectedCourses} />
-                        <Button variant="light" size="sm" style={{ width: '100%' }} onClick={() => handleCourseModal(true)}>
-                            Edit Course
+                        <Button variant="light" size="sm" style={{width: '100%'}}
+                                onClick={() => handleCourseModal(true)}>
+                            Edit Courses
                         </Button>
-                        <Modal size="xl" show={isCourseSelectionModalOpen} onHide={() => handleCourseModal(false)} backdrop="static" centered>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Edit Courses</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                <InputGroup className="mb-3">
-                                    <Form.Select aria-label="Subject filter" onChange={(e) => setSelectedSubject(e.target.value)}>
-                                        <option value="">Select Subject</option>
-                                        {uniqueSubjects.map((subject, index) => (
-                                            <option key={index} value={subject}>{subject}</option>
-                                        ))}
-                                    </Form.Select>
-                                    <Form.Control type="text" placeholder="Search by course number" onChange={(e) => setSelectedCourseNumber(e.target.value)} />
-                                </InputGroup>
-                                <InputGroup className="mb-3">
-                                    <Form.Select aria-label="Instructor filter" onChange={(e) => setSelectedInstructor(e.target.value)}>
-                                        <option value="">Select Instructor</option>
-                                        {uniqueInstructors.map((instructor, index) => (
-                                            <option key={index} value={instructor}>{instructor}</option>
-                                        ))}
-                                    </Form.Select>
-                                    <Form.Select aria-label="Location filter" onChange={(e) => setSelectedLocation(e.target.value)}>
-                                        <option value="">Select Location</option>
-                                        {uniqueLocations.map((location, index) => (
-                                            <option key={index} value={location}>{location}</option>
-                                        ))}
-                                    </Form.Select>
-                                </InputGroup>
-                                <Button onClick={filterCourses} variant="primary">Filter</Button>
-                                <Button onClick={console.log("Joemama")} variant="light" style={{ marginLeft: '1rem' }}>Edit Course</Button>
-                                <Button onClick={console.log("Joemama")} variant="light" style={{ marginLeft: '1rem' }}>Add Course</Button>
-                                <Button onClick={console.log("Joemama")} variant="light" style={{ marginLeft: '1rem' }}>Delete Course</Button>
-                                <CSModalCourseList courses={filteredCourses} isSmallView={false} />
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={() => handleCourseModal(false)}>Cancel</Button>
-                            </Modal.Footer>
-                        </Modal>
                     </Card.Body>
                 </Card>
+                <Modal size="xl" show={isCourseSelectionModalOpen} onHide={() => handleCourseModal(false)}
+                       backdrop="static" centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Edit Courses</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <InputGroup className="mb-3">
+                            <Form.Select aria-label="Subject filter"
+                                         onChange={(e) => setSelectedSubject(e.target.value)}>
+                                <option value="">Select Subject</option>
+                                {courses.map((course, index) => (
+                                    <option key={index} value={course.subject}>{course.subject}</option>
+                                ))}
+                            </Form.Select>
+                            <Form.Control type="text" placeholder="Search by course number"
+                                          onChange={(e) => setSelectedCourseNumber(e.target.value)}/>
+                        </InputGroup>
+                        <InputGroup className="mb-3">
+                            <Form.Select aria-label="Instructor filter"
+                                         onChange={(e) => setSelectedInstructor(e.target.value)}>
+                                <option value="">Select Instructor</option>
+                                {courses.map((course, index) => (
+                                    <option key={index} value={course.instructor}>{course.instructor}</option>
+                                ))}
+                            </Form.Select>
+                            <Form.Select aria-label="Location filter"
+                                         onChange={(e) => setSelectedLocation(e.target.value)}>
+                                <option value="">Select Location</option>
+                                {courses.map((course, index) => (
+                                    <option key={index} value={course.location}>{course.location}</option>
+                                ))}
+                            </Form.Select>
+                        </InputGroup>
+                        <Button onClick={filterCourses} variant="primary">Search</Button>
+                        <CSModalCourseList courses={filteredCourses} isSmallView={false}/>
+                        <Button onClick={() => openCourseDialog('add')} variant="light" style={{marginLeft: '1rem'}}>Add
+                            Course</Button>
+                        <Button onClick={() => openCourseDialog('edit', currentCourse)} variant="light"
+                                style={{marginLeft: '1rem'}}>Edit Course</Button>
+                        <Button onClick={() => openCourseDialog('delete', currentCourse)} variant="light"
+                                style={{marginLeft: '1rem'}}>Delete Course</Button>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => handleCourseModal(false)}>Cancel</Button>
+                    </Modal.Footer>
+                </Modal>
+                <Modal show={showCourseDialog} onHide={() => setShowCourseDialog(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{courseDialogMode.charAt(0).toUpperCase() + courseDialogMode.slice(1)} Course</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Subject</Form.Label>
+                                <Form.Control type="text" placeholder="Enter subject" name="subject"
+                                              value={currentCourse.subject} onChange={e => setCurrentCourse({
+                                    ...currentCourse,
+                                    subject: e.target.value
+                                })}/>
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Instructor</Form.Label>
+                                <Form.Control type="text" placeholder="Enter instructor" name="instructor"
+                                              value={currentCourse.instructor} onChange={e => setCurrentCourse({
+                                    ...currentCourse,
+                                    instructor: e.target.value
+                                })}/>
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Course Number</Form.Label>
+                                <Form.Control type="text" placeholder="Enter course number" name="courseNumber"
+                                              value={currentCourse.courseNumber} onChange={e => setCurrentCourse({
+                                    ...currentCourse,
+                                    courseNumber: e.target.value
+                                })}/>
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Location</Form.Label>
+                                <Form.Control type="text" placeholder="Enter location" name="location"
+                                              value={currentCourse.location} onChange={e => setCurrentCourse({
+                                    ...currentCourse,
+                                    location: e.target.value
+                                })}/>
+                            </Form.Group>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowCourseDialog(false)}>Cancel</Button>
+                        <Button variant="primary"
+                                onClick={handleCourseSave}>{courseDialogMode === 'delete' ? 'Delete' : 'Save'}</Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         </div>
     );
